@@ -1,0 +1,22 @@
+{
+  "name": "zod-empty",
+  "version": "0.0.0",
+  "description": "generate minimum data from zod schema.",
+  "main": "dist/index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toiroakr/zod-empty.git"
+  },
+  "keywords": [
+    "zod",
+    "empty",
+    "schema"
+  ],
+  "author": "toiroakr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toiroakr/zod-empty/issues"
+  },
+  "homepage": "https://github.com/toiroakr/zod-empty#readme"
+}
