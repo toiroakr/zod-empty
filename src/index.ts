@@ -16,6 +16,12 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
     case "ZodString":
       return "";
     case "ZodNumber":
+      for(const check of (def.checks || [])) {
+        if (["min", "max"].includes(check.kind)) {
+          return check.value;
+        }
+      }
+      return 0;
     case "ZodBigInt":
       return 0;
     case "ZodBoolean":
