@@ -103,9 +103,6 @@
     "npm": "8.16.0"
   },
   "type": "commonjs",
-  "dependencies": {
-    "link": "1.5.1"
-  },
   "exports": {
     "./package.json": "./package.json",
     "./*": {
