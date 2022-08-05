@@ -1,0 +1,23 @@
+name: comment coverage report
+inputs:
+  token:
+    description: 'GITHUB_TOKEN'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - run: npm run coverage | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" > /tmp/coverage.log
+      shell: bash
+    - id: coverage-log
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: /tmp/coverage.log
+    - uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        GITHUB_TOKEN: ${{ inputs.token }}
+        header: coverage-summary
+        message: |
+          ## Coverage Summary
+          
+          ```${{ steps.coverage-log.outputs.content }}```
