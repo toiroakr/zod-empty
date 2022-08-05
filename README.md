@@ -32,7 +32,7 @@ const schema = z.object({
   age: z.number().min(10),
 });
 // create default values with zod-empty
-const defaultValues = init(schema);
+const defaultValues = init(schema); // => { name: "", age: 10 }
 
 const App = () => {
   const {
