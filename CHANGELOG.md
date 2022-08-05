@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/toiroakr/zod-empty/compare/v1.0.1...v1.0.2) (2022-08-05)
+
+
+### Bug Fixes
+
+* remove dependency. ([de6f6b1](https://github.com/toiroakr/zod-empty/commit/de6f6b198d9c4674f27a1b2b26dbd6a2ec0a7437))
+
 ## [1.0.1](https://github.com/toiroakr/zod-empty/compare/v1.0.0...v1.0.1) (2022-08-05)
 
 
