@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, describe, it, vi } from "vitest";
 import z from "zod";
-import make from "./index";
+import init from "./index";
 
 describe("make empty", () => {
   beforeEach(() => {
@@ -11,54 +11,54 @@ describe("make empty", () => {
   });
 
   it("string", () => {
-    expect(make(z.string())).toBe("");
+    expect(init(z.string())).toBe("");
   });
 
   it("number", () => {
-    expect(make(z.number())).toBe(0);
-    expect(make(z.number().min(10))).toBe(10);
-    expect(make(z.number().max(100))).toBe(100);
-    expect(make(z.number().min(10).max(100))).toBe(10);
-    expect(make(z.number().max(100).min(10))).toBe(100);
+    expect(init(z.number())).toBe(0);
+    expect(init(z.number().min(10))).toBe(10);
+    expect(init(z.number().max(100))).toBe(100);
+    expect(init(z.number().min(10).max(100))).toBe(10);
+    expect(init(z.number().max(100).min(10))).toBe(100);
   });
 
   it("bigint", () => {
-    expect(make(z.bigint())).toBe(0);
+    expect(init(z.bigint())).toBe(0);
   });
 
   it("boolean", () => {
-    expect(make(z.boolean())).toBe(false);
+    expect(init(z.boolean())).toBe(false);
   });
 
   it("date", () => {
-    expect(make(z.date())).toEqual(new Date());
+    expect(init(z.date())).toEqual(new Date());
   });
 
   it("literal", () => {
-    expect(make(z.literal("literal"))).toBe("literal");
+    expect(init(z.literal("literal"))).toBe("literal");
   });
 
   it("array", () => {
-    expect(make(z.array(z.string()))).toEqual([]);
+    expect(init(z.array(z.string()))).toEqual([]);
   });
 
   it("transform", () => {
-    expect(make(z.string().transform((val) => val.length))).toBe("");
+    expect(init(z.string().transform((val) => val.length))).toBe("");
   });
 
   it("object", () => {
-    expect(make(z.object({ foo: z.string(), bar: z.number() }))).toEqual({
+    expect(init(z.object({ foo: z.string(), bar: z.number() }))).toEqual({
       foo: "",
       bar: 0,
     });
   });
 
   it("record", () => {
-    expect(make(z.record(z.string(), z.number()))).toEqual({});
+    expect(init(z.record(z.string(), z.number()))).toEqual({});
   });
 
   it("enum", () => {
-    expect(make(z.enum([`light`, `dark`]))).toBe("light");
+    expect(init(z.enum([`light`, `dark`]))).toBe("light");
   });
 
   it("nativeEnum", () => {
@@ -67,16 +67,16 @@ describe("make empty", () => {
       b = 2,
     }
 
-    expect(make(z.nativeEnum(NativeEnum))).toBe(NativeEnum.a);
+    expect(init(z.nativeEnum(NativeEnum))).toBe(NativeEnum.a);
   });
 
   it("union", () => {
-    expect(make(z.union([z.string(), z.number()]))).toBe("");
+    expect(init(z.union([z.string(), z.number()]))).toBe("");
   });
 
   it("discriminatedUnion", () => {
     expect(
-      make(
+      init(
         z.discriminatedUnion("type", [
           z.object({ type: z.literal("a"), a: z.string() }),
           z.object({ type: z.literal("b"), b: z.string() }),
@@ -95,7 +95,7 @@ describe("make empty", () => {
       salary: z.number(),
     });
 
-    expect(make(z.intersection(Person, Employee))).toEqual({
+    expect(init(z.intersection(Person, Employee))).toEqual({
       name: "",
       age: 0,
       role: "",
@@ -110,62 +110,69 @@ describe("make empty", () => {
       .args(z.number(), z.string())
       .returns(z.boolean());
     type SchemaType = z.infer<typeof schema>;
-    expect(make<SchemaType>(schema)(0, "")).toBe(false);
+    expect(init<SchemaType>(schema)(0, "")).toBe(false);
   });
 
   it("tuple", () => {
-    expect(make(z.tuple([z.string(), z.number()]))).toEqual(["", 0]);
+    expect(init(z.tuple([z.string(), z.number()]))).toEqual(["", 0]);
   });
 
   it("set", () => {
-    expect(make(z.set(z.string()))).toEqual(new Set());
+    expect(init(z.set(z.string()))).toEqual(new Set());
   });
 
   it("map", () => {
-    expect(make(z.map(z.string(), z.number()))).toEqual(new Map());
+    expect(init(z.map(z.string(), z.number()))).toEqual(new Map());
   });
 
   it("default", () => {
-    expect(make(z.any().default({ default: true }))).toEqual({ default: true });
+    expect(init(z.string().default("default value"))).toBe("default value");
+    expect(init(z.number().default(2))).toBe(2);
+    expect(init(z.boolean().default(true))).toBe(true);
+
+    // return value not strict equal to default parameter.
+    const defaultValue = { default: true };
+    expect(init(z.any().default(defaultValue))).toEqual({ default: true });
+    expect(init(z.any().default(defaultValue)) === defaultValue).toBe(false);
   });
 
   it("nan", () => {
-    expect(make(z.nan())).toBeNaN();
+    expect(init(z.nan())).toBeNaN();
   });
 
   it("null", () => {
-    expect(make(z.null())).null;
+    expect(init(z.null())).toBeNull();
   });
 
   it("nullable", () => {
-    expect(make(z.string().nullable())).null;
+    expect(init(z.string().nullable())).toBeNull();
   });
 
   it("nullish", () => {
-    expect(make(z.string().nullish())).null;
+    expect(init(z.string().nullish())).toBeNull();
   });
 
   it("optional", () => {
-    expect(make(z.string().optional())).undefined;
+    expect(init(z.string().optional())).toBeUndefined();
   });
 
   it("undefined", () => {
-    expect(make(z.undefined())).undefined;
+    expect(init(z.undefined())).toBeUndefined();
   });
 
   it("void", () => {
-    expect(make(z.void())).undefined;
+    expect(init(z.void())).toBeUndefined();
   });
 
   it("any", () => {
-    expect(make(z.any())).undefined;
+    expect(init(z.any())).toBeUndefined();
   });
 
   it("unknown", () => {
-    expect(make(z.unknown())).undefined;
+    expect(init(z.unknown())).toBeUndefined();
   });
 
   it("never", () => {
-    expect(make(z.never())).undefined;
+    expect(init(z.never())).toBeUndefined();
   });
 });
