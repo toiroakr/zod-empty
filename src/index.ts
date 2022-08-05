@@ -58,7 +58,9 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (..._: any[]) => make(def.returns);
     case "ZodDefault":
-      return clone(def.defaultValue());
+      return def.innerType._def.typeName === "ZodFunction"
+        ? def.defaultValue()
+        : clone(def.defaultValue());
     case "ZodNaN":
       return NaN;
     case "ZodNull":
