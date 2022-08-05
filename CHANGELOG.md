@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/toiroakr/zod-empty/compare/v1.0.3...v1.0.4) (2022-08-05)
+
+
+### Bug Fixes
+
+* default method for function schema. ([fa98db3](https://github.com/toiroakr/zod-empty/commit/fa98db38e427395d1ea37a6be667bdfd9373a7aa))
+
 ## [1.0.3](https://github.com/toiroakr/zod-empty/compare/v1.0.2...v1.0.3) (2022-08-05)
 
 
