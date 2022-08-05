@@ -6,6 +6,7 @@
   "main": "./cjs/index.cjs",
   "module": "./esm/index.js",
   "scripts": {
+    "prepare": "is-ci || husky install",
     "build": "packemon pack --addEngines --addExports --declaration --declarationConfig tsconfig.build.json",
     "release": "npm run build && npm publish",
     "lint": "eslint \"**/*.ts\"",
@@ -44,6 +45,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-unused-imports": "2.0.0",
     "husky": "8.0.1",
+    "is-ci": "3.0.1",
     "lint-staged": "13.0.3",
     "packemon": "2.3.3",
     "prettier": "2.7.1",
