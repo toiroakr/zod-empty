@@ -1,5 +1,8 @@
 # zod-empty
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://badge.fury.io/js/zod-empty.svg)](https://badge.fury.io/js/zod-empty)
+
 Generate minimum data from zod schema.
 
 Same motivation as [json-schema-empty](https://github.com/romeovs/json-schema-empty)
