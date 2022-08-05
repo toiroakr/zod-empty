@@ -2,8 +2,16 @@
   "name": "zod-empty",
   "version": "0.0.0",
   "description": "generate minimum data from zod schema.",
-  "main": "dist/index.js",
-  "scripts": {},
+  "types": "./dts/index.d.ts",
+  "main": "./cjs/index.cjs",
+  "module": "./esm/index.js",
+  "scripts": {
+    "build": "packemon pack --addEngines --addExports --declaration --declarationConfig tsconfig.build.json",
+    "release": "npm run build && npm publish",
+    "lint": "eslint \"**/*.ts\"",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/toiroakr/zod-empty.git"
@@ -18,5 +26,101 @@
   "bugs": {
     "url": "https://github.com/toiroakr/zod-empty/issues"
   },
-  "homepage": "https://github.com/toiroakr/zod-empty#readme"
+  "homepage": "https://github.com/toiroakr/zod-empty#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "5.32.0",
+    "@typescript-eslint/parser": "5.32.0",
+    "@vitest/ui": "0.20.3",
+    "c8": "7.12.0",
+    "eslint": "8.21.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-unused-imports": "2.0.0",
+    "husky": "8.0.1",
+    "lint-staged": "13.0.3",
+    "packemon": "2.3.3",
+    "prettier": "2.7.1",
+    "semantic-release": "19.0.3",
+    "ts-node": "10.9.1",
+    "typescript": "4.7.4",
+    "vitest": "0.20.3",
+    "zod": "3.17.10"
+  },
+  "packemon": [
+    {
+      "inputs": {
+        "index": "./src/index.ts"
+      },
+      "platform": "node",
+      "format": "cjs",
+      "support": "current"
+    },
+    {
+      "inputs": {
+        "index": "./src/index.ts"
+      },
+      "platform": "browser",
+      "support": "current"
+    }
+  ],
+  "files": [
+    "cjs/**/*.{cjs,mjs,map}",
+    "dts/**/*.d.ts",
+    "esm/**/*.{js,map}",
+    "lib/**/*.{js,map}",
+    "mjs/**/*.{mjs,map}",
+    "src/**/*.{ts,tsx,json}"
+  ],
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ],
+    "branches": [
+      "main"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16.12.0",
+    "npm": ">=8.1.0"
+  },
+  "volta": {
+    "node": "16.16.0",
+    "npm": "8.16.0"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "link": "1.5.1"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "node": {
+        "import": "./mjs/*.mjs",
+        "require": "./cjs/*.cjs"
+      }
+    },
+    ".": {
+      "types": "./dts/index.d.ts",
+      "browser": {
+        "module": "./esm/index.js",
+        "import": "./esm/index.js",
+        "default": "./lib/index.js"
+      },
+      "node": {
+        "import": "./cjs/index-wrapper.mjs",
+        "require": "./cjs/index.cjs"
+      },
+      "default": "./lib/index.js"
+    }
+  }
 }
