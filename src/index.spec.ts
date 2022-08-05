@@ -16,6 +16,10 @@ describe("make empty", () => {
 
   it("number", () => {
     expect(make(z.number())).toBe(0);
+    expect(make(z.number().min(10))).toBe(10);
+    expect(make(z.number().max(100))).toBe(100);
+    expect(make(z.number().min(10).max(100))).toBe(10);
+    expect(make(z.number().max(100).min(10))).toBe(100);
   });
 
   it("bigint", () => {
