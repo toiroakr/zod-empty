@@ -110,7 +110,7 @@ describe("make empty", () => {
       .args(z.number(), z.string())
       .returns(z.boolean());
     type SchemaType = z.infer<typeof schema>;
-    expect(init<SchemaType>(schema)(0, "")).toBe(false);
+    expect(init(schema)(0, "")).toBe(false);
   });
 
   it("tuple", () => {

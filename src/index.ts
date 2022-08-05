@@ -1,15 +1,15 @@
 /* eslint @typescript-eslint/no-explicit-any: off */
 import clone from "just-clone";
-import type { ZodTypeAny } from "zod";
+import type { input, ZodTypeAny } from "zod";
 
-function make<T extends ZodTypeAny>(schema: T): unknown {
+function init<T extends ZodTypeAny>(schema: T): input<T> {
   const def = schema._def;
 
   switch (def.typeName) {
     case "ZodObject":
       const outputObject: Record<string, any> = {};
       Object.entries(def.shape()).forEach(
-        ([key, value]) => (outputObject[key] = make(value as ZodTypeAny))
+        ([key, value]) => (outputObject[key] = init(value as ZodTypeAny))
       );
       return outputObject;
     case "ZodRecord":
@@ -32,11 +32,11 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
     case "ZodLiteral":
       return def.value;
     case "ZodEffects":
-      return make(def.schema);
+      return init(def.schema);
     case "ZodArray":
       return [];
     case "ZodTuple":
-      return def.items.map((item: ZodTypeAny) => make(item));
+      return def.items.map((item: ZodTypeAny) => init(item));
     case "ZodSet":
       return new Set();
     case "ZodMap":
@@ -49,14 +49,14 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
         (value) => typeof def.values[value as any] !== "number"
       )[0];
     case "ZodUnion":
-      return make(def.options[0]);
+      return init(def.options[0]);
     case "ZodDiscriminatedUnion":
-      return make(Array.from(def.options.values() as any[])[0]);
+      return init(Array.from(def.options.values() as any[])[0]);
     case "ZodIntersection":
-      return Object.assign(make(def.left) as any, make(def.right));
+      return Object.assign(init(def.left) as any, init(def.right));
     case "ZodFunction":
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return (..._: any[]) => make(def.returns);
+      return (..._: any[]) => init(def.returns);
     case "ZodDefault":
       return def.innerType._def.typeName === "ZodFunction"
         ? def.defaultValue()
@@ -75,8 +75,5 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
     default:
       return undefined;
   }
-}
-function init<R = unknown>(schema: any): R {
-  return make(schema) as R;
 }
 export default init;
