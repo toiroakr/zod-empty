@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "preinstall": "npm i --prefix ../../ & npm run build --prefix ../../",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
@@ -22,5 +23,9 @@
     "@vitejs/plugin-react": "^2.0.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0"
+  },
+  "volta": {
+    "node": "16.16.0",
+    "npm": "8.16.0"
   }
 }
