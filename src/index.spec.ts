@@ -129,11 +129,23 @@ describe("make empty", () => {
     expect(init(z.string().default("default value"))).toBe("default value");
     expect(init(z.number().default(2))).toBe(2);
     expect(init(z.boolean().default(true))).toBe(true);
+    expect(init(z.null().default(null))).toBeNull();
+    expect(init(z.any().default({ default: true }))).toEqual({ default: true });
 
-    // return value not strict equal to default parameter.
-    const defaultValue = { default: true };
-    expect(init(z.any().default(defaultValue))).toEqual({ default: true });
-    expect(init(z.any().default(defaultValue)) === defaultValue).toBe(false);
+    const defaultFunction = (s: string) => s?.length;
+    expect(
+      init(
+        z
+          .function()
+          .args(z.string())
+          .returns(z.number())
+          .default(() => defaultFunction)
+      )
+    ).toBe(defaultFunction);
+
+    // return value for object/array/set/map not strict equal to default parameter.
+    const defaultObject = { default: true };
+    expect(init(z.any().default(defaultObject)) === defaultObject).toBe(false);
   });
 
   it("nan", () => {
