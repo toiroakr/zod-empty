@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-explicit-any: off */
+import clone from "just-clone";
 import type { ZodTypeAny } from "zod";
 
 function make<T extends ZodTypeAny>(schema: T): unknown {
@@ -16,7 +17,7 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
     case "ZodString":
       return "";
     case "ZodNumber":
-      for(const check of (def.checks || [])) {
+      for (const check of def.checks || []) {
         if (["min", "max"].includes(check.kind)) {
           return check.value;
         }
@@ -57,7 +58,7 @@ function make<T extends ZodTypeAny>(schema: T): unknown {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (..._: any[]) => make(def.returns);
     case "ZodDefault":
-      return def.defaultValue();
+      return clone(def.defaultValue());
     case "ZodNaN":
       return NaN;
     case "ZodNull":
