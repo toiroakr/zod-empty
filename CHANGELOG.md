@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/toiroakr/zod-empty/compare/v1.0.2...v1.0.3) (2022-08-05)
+
+
+### Bug Fixes
+
+* default returns cloned value. ([7d7cc6c](https://github.com/toiroakr/zod-empty/commit/7d7cc6cfefa056f5befaf5cd25abb86b63b82763))
+
 ## [1.0.2](https://github.com/toiroakr/zod-empty/compare/v1.0.1...v1.0.2) (2022-08-05)
 
 
