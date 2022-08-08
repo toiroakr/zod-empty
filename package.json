@@ -1,6 +1,6 @@
 {
   "name": "zod-empty",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "generate minimum data from zod schema.",
   "types": "./dts/index.d.ts",
   "main": "./cjs/index.cjs",

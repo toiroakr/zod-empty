@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/toiroakr/zod-empty/compare/v1.0.5...v1.0.6) (2022-08-08)
+
+
+### Bug Fixes
+
+* build before release. ([c26ef7d](https://github.com/toiroakr/zod-empty/commit/c26ef7d72712b38745103d814532f7bf1050da35))
+
 ## [1.0.5](https://github.com/toiroakr/zod-empty/compare/v1.0.4...v1.0.5) (2022-08-05)
 
 
