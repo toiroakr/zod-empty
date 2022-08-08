@@ -110,3 +110,4 @@ dts/
 esm/
 lib/
 mjs/
+.npmrc
