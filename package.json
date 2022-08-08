@@ -20,7 +20,8 @@
   "keywords": [
     "zod",
     "empty",
-    "schema"
+    "schema",
+    "react-hook-form"
   ],
   "author": "toiroakr",
   "license": "MIT",
