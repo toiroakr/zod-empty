@@ -11,7 +11,7 @@ Same motivation as [json-schema-empty](https://github.com/romeovs/json-schema-em
 
 ## Usage
 
-To install json-schema-empty, run:
+To install zod-empty, run:
 
 ```shell
 npm install zod-empty
