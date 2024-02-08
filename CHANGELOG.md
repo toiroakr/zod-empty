@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/toiroakr/zod-empty/compare/v1.0.6...v1.0.7) (2024-02-08)
+
+
+### Bug Fixes
+
+* **package.json:** remove type: "commonjs" ([8e5b270](https://github.com/toiroakr/zod-empty/commit/8e5b2701c2e756518e19890197af34ea2a398957))
+
 ## [1.0.6](https://github.com/toiroakr/zod-empty/compare/v1.0.5...v1.0.6) (2022-08-08)
 
 
