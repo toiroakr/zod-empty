@@ -106,7 +106,6 @@
     "node": "16.16.0",
     "npm": "8.16.0"
   },
-  "type": "commonjs",
   "exports": {
     "./package.json": "./package.json",
     "./*": {
