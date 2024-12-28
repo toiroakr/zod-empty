@@ -59,6 +59,8 @@ function init<T extends ZodTypeAny>(
     case "ZodFunction":
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (..._: any[]) => init(def.returns);
+    case "ZodPipeline":
+      return init(def.in);
     case "ZodDefault":
       return def.innerType._def.typeName === "ZodFunction"
         ? def.defaultValue()
