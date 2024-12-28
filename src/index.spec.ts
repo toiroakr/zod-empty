@@ -109,7 +109,6 @@ describe("make empty", () => {
       .function()
       .args(z.number(), z.string())
       .returns(z.boolean());
-    type SchemaType = z.infer<typeof schema>;
     expect(init(schema)(0, "")).toBe(false);
   });
 
@@ -164,8 +163,13 @@ describe("make empty", () => {
     expect(init(z.string().nullish())).toBeNull();
   });
 
+  it("any", () => {
+    expect(init(z.any())).toBeNull();
+  });
+
   it("optional", () => {
-    expect(init(z.string().optional())).toBeUndefined();
+    expect(init(z.string().optional())).toBe("");
+    expect(init(z.string().optional(), false)).toBeUndefined();
   });
 
   it("undefined", () => {
@@ -176,12 +180,9 @@ describe("make empty", () => {
     expect(init(z.void())).toBeUndefined();
   });
 
-  it("any", () => {
-    expect(init(z.any())).toBeUndefined();
-  });
-
   it("unknown", () => {
-    expect(init(z.unknown())).toBeUndefined();
+    expect(init(z.unknown())).toBeNull();
+    expect(init(z.unknown(), false)).toBeUndefined();
   });
 
   it("never", () => {
