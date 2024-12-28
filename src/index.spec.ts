@@ -188,4 +188,10 @@ describe("make empty", () => {
   it("never", () => {
     expect(init(z.never())).toBeUndefined();
   });
+
+  it("pipe", () => {
+    expect(init(z.string().pipe(z.number()))).toBe("");
+    expect(init(z.number().pipe(z.string()))).toBe(0);
+    expect(init(z.string().nullable().pipe(z.number()))).toBeNull();
+  });
 });
