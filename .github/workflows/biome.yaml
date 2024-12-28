@@ -1,4 +1,4 @@
-name: Test
+name: Biome
 
 on:
   push:
@@ -22,8 +22,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
-      - run: npm test -- --run
-      - uses: ./.github/workflows/actions/coverage-report
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-        if: startsWith(${{ matrix.node-version }}, '16.')
+      - run: npx biome check

@@ -1,8 +1,7 @@
 name: Release
 on:
   workflow_run:
-    workflows:
-      - Test
+    workflows: ["Biome", "Test"]
     branches:
       - main
     types:
