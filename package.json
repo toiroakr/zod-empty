@@ -9,7 +9,8 @@
     "prepare": "is-ci || husky install",
     "build": "packemon pack --addEngines --addExports --declaration",
     "release": "npm run build && npm publish",
-    "lint": "eslint \"**/*.ts\"",
+    "check": "biome check --write",
+    "check:force": "biome check --write --unsafe",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -17,7 +18,12 @@
     "type": "git",
     "url": "git+https://github.com/toiroakr/zod-empty.git"
   },
-  "keywords": ["zod", "empty", "schema", "react-hook-form"],
+  "keywords": [
+    "zod",
+    "empty",
+    "schema",
+    "react-hook-form"
+  ],
   "author": "toiroakr",
   "license": "MIT",
   "bugs": {
@@ -89,7 +95,9 @@
       "@semantic-release/github",
       "@semantic-release/git"
     ],
-    "branches": ["main"]
+    "branches": [
+      "main"
+    ]
   },
   "publishConfig": {
     "access": "public"

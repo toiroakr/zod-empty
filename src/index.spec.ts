@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, describe, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import z from "zod";
 import init from "./index";
 
@@ -58,7 +58,7 @@ describe("make empty", () => {
   });
 
   it("enum", () => {
-    expect(init(z.enum([`light`, `dark`]))).toBe("light");
+    expect(init(z.enum(["light", "dark"]))).toBe("light");
   });
 
   it("nativeEnum", () => {

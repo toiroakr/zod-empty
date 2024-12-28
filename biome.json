@@ -7,12 +7,12 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": []
+    "ignore": [],
+    "include": ["src/**/*.*", "samples/*/src/*.*"]
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "space",
-    "ignore": ["coverage/*.json"]
+    "indentStyle": "space"
   },
   "organizeImports": {
     "enabled": true
@@ -20,7 +20,10 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
     }
   },
   "javascript": {

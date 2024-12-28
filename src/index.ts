@@ -1,6 +1,5 @@
-/* eslint @typescript-eslint/no-explicit-any: off */
 import clone from "just-clone";
-import type { input, ZodTypeAny } from "zod";
+import type { ZodTypeAny, input } from "zod";
 
 function init<T extends ZodTypeAny>(
   schema: T,
@@ -8,12 +7,13 @@ function init<T extends ZodTypeAny>(
 ): input<T> {
   const def = schema._def;
   switch (def.typeName) {
-    case "ZodObject":
-      const outputObject: Record<string, any> = {};
-      Object.entries(def.shape()).forEach(
-        ([key, value]) => (outputObject[key] = init(value as ZodTypeAny)),
-      );
+    case "ZodObject": {
+      const outputObject: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(def.shape())) {
+        outputObject[key] = init(value as ZodTypeAny);
+      }
       return outputObject;
+    }
     case "ZodRecord":
       return {};
     case "ZodString":
@@ -57,7 +57,6 @@ function init<T extends ZodTypeAny>(
     case "ZodIntersection":
       return Object.assign(init(def.left) as any, init(def.right));
     case "ZodFunction":
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (..._: any[]) => init(def.returns);
     case "ZodPipeline":
       return init(def.in);
@@ -66,7 +65,7 @@ function init<T extends ZodTypeAny>(
         ? def.defaultValue()
         : clone(def.defaultValue());
     case "ZodNaN":
-      return NaN;
+      return Number.NaN;
     case "ZodNull":
     case "ZodNullable":
     case "ZodAny":
@@ -77,10 +76,10 @@ function init<T extends ZodTypeAny>(
         return init(def.innerType);
       }
       return undefined;
-    case "ZodUndefined":
-    case "ZodVoid":
-    case "ZodUnknown":
-    case "ZodNever":
+    // case "ZodUndefined":
+    // case "ZodVoid":
+    // case "ZodUnknown":
+    // case "ZodNever":
     default:
       if (avoidUndefined && schema.isNullable()) {
         return null;
