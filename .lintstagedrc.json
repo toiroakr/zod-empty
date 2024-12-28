@@ -1,4 +1,3 @@
 {
-  "*.ts": "eslint --fix",
-  "*.{json,md}": "prettier --write"
+  "*.*": "biome format --write"
 }

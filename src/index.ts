@@ -4,14 +4,14 @@ import type { input, ZodTypeAny } from "zod";
 
 function init<T extends ZodTypeAny>(
   schema: T,
-  avoidUndefined = true
+  avoidUndefined = true,
 ): input<T> {
   const def = schema._def;
   switch (def.typeName) {
     case "ZodObject":
       const outputObject: Record<string, any> = {};
       Object.entries(def.shape()).forEach(
-        ([key, value]) => (outputObject[key] = init(value as ZodTypeAny))
+        ([key, value]) => (outputObject[key] = init(value as ZodTypeAny)),
       );
       return outputObject;
     case "ZodRecord":
@@ -48,7 +48,7 @@ function init<T extends ZodTypeAny>(
     case "ZodNativeEnum":
       // ref. https://github.com/colinhacks/zod/blob/6fe152f98a434a087c0f1ecbce5c52427bd816d3/src/helpers/util.ts#L28-L43
       return Object.values(def.values).filter(
-        (value) => typeof def.values[value as any] !== "number"
+        (value) => typeof def.values[value as any] !== "number",
       )[0];
     case "ZodUnion":
       return init(def.options[0]);

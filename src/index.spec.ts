@@ -80,8 +80,8 @@ describe("make empty", () => {
         z.discriminatedUnion("type", [
           z.object({ type: z.literal("a"), a: z.string() }),
           z.object({ type: z.literal("b"), b: z.string() }),
-        ])
-      )
+        ]),
+      ),
     ).toEqual({ type: "a", a: "" });
   });
 
@@ -138,8 +138,8 @@ describe("make empty", () => {
           .function()
           .args(z.string())
           .returns(z.number())
-          .default(() => defaultFunction)
-      )
+          .default(() => defaultFunction),
+      ),
     ).toBe(defaultFunction);
 
     // return value for object/array/set/map not strict equal to default parameter.
