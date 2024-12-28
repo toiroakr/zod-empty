@@ -2,9 +2,11 @@
 import clone from "just-clone";
 import type { input, ZodTypeAny } from "zod";
 
-function init<T extends ZodTypeAny>(schema: T): input<T> {
+function init<T extends ZodTypeAny>(
+  schema: T,
+  avoidUndefined = true
+): input<T> {
   const def = schema._def;
-
   switch (def.typeName) {
     case "ZodObject":
       const outputObject: Record<string, any> = {};
@@ -65,14 +67,22 @@ function init<T extends ZodTypeAny>(schema: T): input<T> {
       return NaN;
     case "ZodNull":
     case "ZodNullable":
+    case "ZodAny":
+      console.log(def, def.typeName);
       return null;
+    case "ZodOptional":
+      if (avoidUndefined) {
+        return init(def.innerType);
+      }
+      return undefined;
     case "ZodUndefined":
     case "ZodVoid":
-    case "ZodOptional":
-    case "ZodAny":
     case "ZodUnknown":
     case "ZodNever":
     default:
+      if (avoidUndefined && schema.isNullable()) {
+        return null;
+      }
       return undefined;
   }
 }
