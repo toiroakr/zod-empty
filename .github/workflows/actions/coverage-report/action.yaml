@@ -1,7 +1,7 @@
 name: comment coverage report
 inputs:
   token:
-    description: 'GITHUB_TOKEN'
+    description: "GITHUB_TOKEN"
     required: true
 
 runs:
@@ -19,5 +19,5 @@ runs:
         header: coverage-summary
         message: |
           ## Coverage Summary
-          
+
           ```${{ steps.coverage-log.outputs.content }}```
