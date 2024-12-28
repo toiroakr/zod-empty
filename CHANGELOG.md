@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/toiroakr/zod-empty/compare/v1.0.7...v1.1.0) (2024-12-28)
+
+
+### Features
+
+* add avoid undefined option (default: true) ([2493756](https://github.com/toiroakr/zod-empty/commit/249375646505c4cf648de0ff79ecaad53194e311))
+
 ## [1.0.7](https://github.com/toiroakr/zod-empty/compare/v1.0.6...v1.0.7) (2024-02-08)
 
 
