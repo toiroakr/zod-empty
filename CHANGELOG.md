@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/toiroakr/zod-empty/compare/v1.2.0...v1.2.1) (2024-12-29)
+
+
+### Bug Fixes
+
+* return value for nullish schema ([30de68e](https://github.com/toiroakr/zod-empty/commit/30de68e2c0ff7841eecd2929410fb1f3d28380e8))
+
 # [1.2.0](https://github.com/toiroakr/zod-empty/compare/v1.1.1...v1.2.0) (2024-12-29)
 
 
