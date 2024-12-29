@@ -25,14 +25,16 @@ Use with react-hook-form like this: (ref. [react-hook-form](https://github.com/r
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import init from "zod-empty";
+import { init /* , empty */ } from "zod-empty";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   age: z.number().min(10),
+  hobbies: z.array(z.string()),
 });
 // create default values with zod-empty
-const defaultValues = init(schema); // => { name: "", age: 10 }
+const defaultValues = init(schema); // => { name: "", age: 10, hobbies: [] }
+// or const defaultValues = empty(schema); // => { name: null, age: null, hobbies: [] }
 
 const App = () => {
   const {

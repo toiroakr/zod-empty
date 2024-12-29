@@ -3,7 +3,7 @@ import "./App.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import init from "zod-empty";
+import { init /* , empty */ } from "zod-empty";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }).default("default string"),
@@ -11,6 +11,7 @@ const schema = z.object({
 });
 // create default values with zod-empty
 const defaultValues = init(schema);
+// const defaultValues = empty(schema);
 
 const App = () => {
   const {
