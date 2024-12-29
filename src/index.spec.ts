@@ -13,7 +13,7 @@ describe("make empty", () => {
   it("string", () => {
     const schema = z.string();
     expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
+    expect(empty(schema)).toBe("");
   });
 
   it.each([
@@ -75,7 +75,7 @@ describe("make empty", () => {
       buz: [],
     });
     expect(empty(schema)).toEqual({
-      foo: null,
+      foo: "",
       bar: null,
       buz: [],
     });
@@ -105,18 +105,22 @@ describe("make empty", () => {
   });
 
   it("union", () => {
-    const schema = z.union([z.string(), z.number()]);
+    let schema: z.Schema = z.union([z.string(), z.number()]);
     expect(init(schema)).toBe("");
+    expect(empty(schema)).toBe("");
+
+    schema = z.union([z.number(), z.string()]);
+    expect(init(schema)).toBe(0);
     expect(empty(schema)).toBeNull();
   });
 
   it("discriminatedUnion", () => {
     const schema = z.discriminatedUnion("type", [
-      z.object({ type: z.literal("a"), a: z.string() }),
+      z.object({ type: z.literal("a"), a: z.string(), c: z.number() }),
       z.object({ type: z.literal("b"), b: z.string() }),
     ]);
-    expect(init(schema)).toEqual({ type: "a", a: "" });
-    expect(empty(schema)).toEqual({ type: "a", a: null });
+    expect(init(schema)).toEqual({ type: "a", a: "", c: 0 });
+    expect(empty(schema)).toEqual({ type: "a", a: "", c: null });
   });
 
   it("intersection", () => {
@@ -137,9 +141,9 @@ describe("make empty", () => {
       salary: 0,
     });
     expect(empty(schema)).toEqual({
-      name: null,
+      name: "",
       age: null,
-      role: null,
+      role: "",
       salary: null,
     });
   });
@@ -157,7 +161,7 @@ describe("make empty", () => {
   it("tuple", () => {
     const schema = z.tuple([z.string(), z.number()]);
     expect(init(schema)).toEqual(["", 0]);
-    expect(empty(schema)).toEqual([null, null]);
+    expect(empty(schema)).toEqual(["", null]);
   });
 
   it("set", () => {
@@ -219,6 +223,11 @@ describe("make empty", () => {
     it("string", () => {
       const schema = z.string().nullable();
       expect(init(schema)).toBe("");
+      expect(empty(schema)).toBe("");
+    });
+    it("number", () => {
+      const schema = z.number().nullable();
+      expect(init(schema)).toBe(0);
       expect(empty(schema)).toBeNull();
     });
     it("array", () => {
@@ -232,6 +241,11 @@ describe("make empty", () => {
     it("string", () => {
       const schema = z.string().nullish();
       expect(init(schema)).toBe("");
+      expect(empty(schema)).toBe("");
+    });
+    it("number", () => {
+      const schema = z.number().nullish();
+      expect(init(schema)).toBe(0);
       expect(empty(schema)).toBeNull();
     });
     it("array", () => {
@@ -250,7 +264,7 @@ describe("make empty", () => {
   it("optional", () => {
     const schema = z.string().optional();
     expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
+    expect(empty(schema)).toBe("");
   });
 
   it("undefined", () => {
@@ -280,7 +294,7 @@ describe("make empty", () => {
   it("pipe", () => {
     let schema: any = z.string().pipe(z.number());
     expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
+    expect(empty(schema)).toBe("");
 
     schema = z.number().pipe(z.string());
     expect(init(schema)).toBe(0);
@@ -288,6 +302,6 @@ describe("make empty", () => {
 
     schema = z.string().pipe(z.number()).pipe(z.boolean());
     expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
+    expect(empty(schema)).toBe("");
   });
 });
