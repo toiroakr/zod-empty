@@ -56,7 +56,8 @@
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "zod": "3.x"
+    "zod": "3.x",
+    "typescript": "5.x"
   },
   "packemon": [
     {
