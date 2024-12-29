@@ -34,7 +34,7 @@ const schema = z.object({
 });
 // create default values with zod-empty
 const defaultValues = init(schema); // => { name: "", age: 10, hobbies: [] }
-// or const defaultValues = empty(schema); // => { name: null, age: null, hobbies: [] }
+// or const defaultValues = empty(schema); // => { name: "", age: null, hobbies: [] }
 
 const App = () => {
   const {
