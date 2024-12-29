@@ -1,10 +1,7 @@
 import clone from "just-clone";
 import type { ZodTypeAny, input } from "zod";
 
-function init<T extends ZodTypeAny>(
-  schema: T,
-  avoidUndefined = true,
-): input<T> {
+export function init<T extends ZodTypeAny>(schema: T): input<T> {
   const def = schema._def;
   switch (def.typeName) {
     case "ZodObject": {
@@ -69,22 +66,62 @@ function init<T extends ZodTypeAny>(
     case "ZodNull":
     case "ZodNullable":
     case "ZodAny":
-      console.log(def, def.typeName);
       return null;
-    case "ZodOptional":
-      if (avoidUndefined) {
-        return init(def.innerType);
-      }
-      return undefined;
+    // case "ZodOptional":
     // case "ZodUndefined":
     // case "ZodVoid":
     // case "ZodUnknown":
     // case "ZodNever":
     default:
-      if (avoidUndefined && schema.isNullable()) {
+      if (schema.isNullable()) {
         return null;
       }
       return undefined;
   }
 }
-export default init;
+
+export function empty<T extends ZodTypeAny>(schema: T): input<T> {
+  if (schema.isNullable()) {
+    return null;
+  }
+  const def = schema._def;
+  switch (def.typeName) {
+    case "ZodObject": {
+      const outputObject: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(def.shape())) {
+        outputObject[key] = empty(value as ZodTypeAny);
+      }
+      return outputObject;
+    }
+    case "ZodRecord":
+      return {};
+    case "ZodArray":
+      return [];
+    case "ZodTuple":
+      return def.items.map((item: ZodTypeAny) => empty(item));
+    case "ZodSet":
+      return new Set();
+    case "ZodMap":
+      return new Map();
+    case "ZodUnion":
+      return empty(def.options[0]);
+    case "ZodDiscriminatedUnion":
+      return empty(Array.from(def.options.values() as any[])[0]);
+    case "ZodIntersection":
+      return Object.assign(empty(def.left) as any, empty(def.right));
+    case "ZodPipeline":
+      return empty(def.in);
+    case "ZodOptional":
+      return empty(def.innerType);
+    case "ZodLiteral":
+      return def.value;
+    case "ZodNaN":
+      return Number.NaN;
+    case "ZodDefault":
+      return def.innerType._def.typeName === "ZodFunction"
+        ? def.defaultValue()
+        : clone(def.defaultValue());
+    default:
+      return null;
+  }
+}
