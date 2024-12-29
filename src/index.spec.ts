@@ -215,16 +215,30 @@ describe("make empty", () => {
     expect(empty(schema)).toBeNull();
   });
 
-  it("nullable", () => {
-    const schema = z.string().nullable();
-    expect(init(schema)).toBeNull();
-    expect(empty(schema)).toBeNull();
+  describe("nullable", () => {
+    it("string", () => {
+      const schema = z.string().nullable();
+      expect(init(schema)).toBe("");
+      expect(empty(schema)).toBeNull();
+    });
+    it("array", () => {
+      const schema = z.array(z.string()).nullable();
+      expect(init(schema)).toStrictEqual([]);
+      expect(empty(schema)).toStrictEqual([]);
+    });
   });
 
-  it("nullish", () => {
-    const schema = z.string().nullish();
-    expect(init(schema)).toBeNull();
-    expect(empty(schema)).toBeNull();
+  describe("nullish", () => {
+    it("string", () => {
+      const schema = z.string().nullish();
+      expect(init(schema)).toBe("");
+      expect(empty(schema)).toBeNull();
+    });
+    it("array", () => {
+      const schema = z.array(z.string()).nullish();
+      expect(init(schema)).toStrictEqual([]);
+      expect(empty(schema)).toStrictEqual([]);
+    });
   });
 
   it("any", () => {
@@ -235,7 +249,7 @@ describe("make empty", () => {
 
   it("optional", () => {
     const schema = z.string().optional();
-    expect(init(schema)).toBeUndefined();
+    expect(init(schema)).toBe("");
     expect(empty(schema)).toBeNull();
   });
 

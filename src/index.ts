@@ -64,10 +64,11 @@ export function init<T extends ZodTypeAny>(schema: T): input<T> {
     case "ZodNaN":
       return Number.NaN;
     case "ZodNull":
-    case "ZodNullable":
     case "ZodAny":
       return null;
-    // case "ZodOptional":
+    case "ZodNullable":
+    case "ZodOptional":
+      return init(def.innerType);
     // case "ZodUndefined":
     // case "ZodVoid":
     // case "ZodUnknown":
@@ -81,9 +82,6 @@ export function init<T extends ZodTypeAny>(schema: T): input<T> {
 }
 
 export function empty<T extends ZodTypeAny>(schema: T): input<T> {
-  if (schema.isNullable()) {
-    return null;
-  }
   const def = schema._def;
   switch (def.typeName) {
     case "ZodObject": {
@@ -111,6 +109,7 @@ export function empty<T extends ZodTypeAny>(schema: T): input<T> {
       return Object.assign(empty(def.left) as any, empty(def.right));
     case "ZodPipeline":
       return empty(def.in);
+    case "ZodNullable":
     case "ZodOptional":
       return empty(def.innerType);
     case "ZodLiteral":
