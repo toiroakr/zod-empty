@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/toiroakr/zod-empty/compare/v1.2.1...v1.2.2) (2024-12-29)
+
+
+### Bug Fixes
+
+* empty string "" ([ae3ce69](https://github.com/toiroakr/zod-empty/commit/ae3ce69cd6af571c601eb8ffdedddb374e2aa4bf))
+
 ## [1.2.1](https://github.com/toiroakr/zod-empty/compare/v1.2.0...v1.2.1) (2024-12-29)
 
 
