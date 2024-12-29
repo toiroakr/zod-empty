@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/toiroakr/zod-empty/compare/v1.1.1...v1.2.0) (2024-12-29)
+
+
+### Features
+
+* add empty function ([83f1489](https://github.com/toiroakr/zod-empty/commit/83f1489324c1b179aaef0e2576e4700aa2faf961))
+
 ## [1.1.1](https://github.com/toiroakr/zod-empty/compare/v1.1.0...v1.1.1) (2024-12-28)
 
 
