@@ -55,6 +55,8 @@ export function init<T extends ZodTypeAny>(schema: T): input<T> {
       return Object.assign(init(def.left) as any, init(def.right));
     case "ZodFunction":
       return (..._: any[]) => init(def.returns);
+    case "ZodLazy":
+      return init(def.getter());
     case "ZodPipeline":
       return init(def.in);
     case "ZodDefault":
@@ -109,6 +111,8 @@ export function empty<T extends ZodTypeAny>(schema: T): input<T> {
       return empty(Array.from(def.options.values() as any[])[0]);
     case "ZodIntersection":
       return Object.assign(empty(def.left) as any, empty(def.right));
+    case "ZodLazy":
+      return empty(def.getter());
     case "ZodPipeline":
       return empty(def.in);
     case "ZodNullable":
