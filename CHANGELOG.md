@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/toiroakr/zod-empty/compare/v1.2.2...v1.3.0) (2024-12-30)
+
+
+### Features
+
+* support lazy ([e430e1d](https://github.com/toiroakr/zod-empty/commit/e430e1d10e1305536ce0b55ac384a921802079eb))
+
 ## [1.2.2](https://github.com/toiroakr/zod-empty/compare/v1.2.1...v1.2.2) (2024-12-29)
 
 
