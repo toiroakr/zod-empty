@@ -158,6 +158,12 @@ describe("make empty", () => {
     expect(empty(schema)).toBeNull();
   });
 
+  it("lazy", () => {
+    const schema = z.lazy(() => z.string());
+    expect(init(schema)).toBe("");
+    expect(empty(schema)).toBe("");
+  });
+
   it("tuple", () => {
     const schema = z.tuple([z.string(), z.number()]);
     expect(init(schema)).toEqual(["", 0]);
