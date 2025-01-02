@@ -21,10 +21,11 @@ npm install zod-empty
 
 Use with react-hook-form like this: (ref. [react-hook-form](https://github.com/react-hook-form/resolvers#zod))
 
+// Please check default value for schema [here](./src/index.spec.ts).
 ```typescript jsx
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { z } from "zod";
 import { init /* , empty */ } from "zod-empty";
 
 const schema = z.object({
