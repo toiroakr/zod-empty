@@ -93,8 +93,6 @@ export function empty<T extends ZodTypeAny>(schema: T): input<T> {
       }
       return outputObject;
     }
-    case "ZodString":
-      return "";
     case "ZodRecord":
       return {};
     case "ZodArray":
