@@ -308,6 +308,6 @@ describe("make empty", () => {
 
     schema = z.string().pipe(z.number()).pipe(z.boolean());
     expect(init(schema)).toBe("");
-    expect(empty(schema)).toBe("");
+    expect(empty(schema)).toBeNull();
   });
 });
