@@ -1,3 +1,12 @@
+## [1.3.1](https://github.com/toiroakr/zod-empty/compare/v1.3.0...v1.3.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* empty string to null ([14dcff3](https://github.com/toiroakr/zod-empty/commit/14dcff3802b0400b5716139a677156867e642307))
+* empty string to null ([#19](https://github.com/toiroakr/zod-empty/issues/19)) ([cf03084](https://github.com/toiroakr/zod-empty/commit/cf03084680b5a7d113ff5118dc9d5b6ed8b6de8b))
+* test ([183904b](https://github.com/toiroakr/zod-empty/commit/183904b8cdb5ac3288514c1f57632d05e68281e7))
+
 # [1.3.0](https://github.com/toiroakr/zod-empty/compare/v1.2.2...v1.3.0) (2024-12-30)
 
 
