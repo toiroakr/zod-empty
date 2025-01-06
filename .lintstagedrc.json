@@ -1,3 +1,4 @@
 {
-  "*.{ts,mts,js,mjs,json}": "biome check --write"
+  "{src/**/*.*,samples/*/src/**/*.*}": "biome check --write",
+  "./src/*.ts": "vitest --run"
 }
