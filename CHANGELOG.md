@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/toiroakr/zod-empty/compare/v1.3.1...v1.3.2) (2025-01-08)
+
+
+### Bug Fixes
+
+* empty effect ([7742b63](https://github.com/toiroakr/zod-empty/commit/7742b63b90c65d20f5b10da80428e0cbc48c5939))
+
 ## [1.3.1](https://github.com/toiroakr/zod-empty/compare/v1.3.0...v1.3.1) (2025-01-06)
 
 
