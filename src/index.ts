@@ -1,5 +1,5 @@
 import clone from "just-clone";
-import type { ZodTypeAny, input } from "zod";
+import type { input, ZodTypeAny } from "zod";
 
 export function init<T extends ZodTypeAny>(schema: T): input<T> {
   const def = schema._def;
@@ -118,6 +118,8 @@ export function empty<T extends ZodTypeAny>(schema: T): input<T> {
       return empty(def.innerType);
     case "ZodLiteral":
       return def.value;
+    case "ZodEffects":
+      return empty(def.schema);
     case "ZodNaN":
       return Number.NaN;
     case "ZodDefault":
