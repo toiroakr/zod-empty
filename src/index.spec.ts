@@ -24,7 +24,7 @@ describe("make empty", () => {
     ["10-100 (reverse)", z.number().max(100).min(10), 100],
   ])("number %s", (_, schema, initExpect) => {
     expect(init(schema)).toBe(initExpect);
-    expect(empty(z.number())).toBeNull();
+    expect(empty(schema)).toBeNull();
   });
 
   it("bigint", () => {
@@ -179,6 +179,7 @@ describe("make empty", () => {
   it("map", () => {
     const schema = z.map(z.string(), z.number());
     expect(init(schema)).toEqual(new Map());
+    expect(empty(schema)).toEqual(new Map());
   });
 
   describe("default", () => {
