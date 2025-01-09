@@ -3,6 +3,10 @@ import type { ZodTypeAny, input, output } from "zod";
 
 export function init<T extends ZodTypeAny>(schema: T): output<T> {
   const def = schema._def;
+  if (schema.isNullable() && def.typeName !== "ZodDefault") {
+    return null;
+  }
+
   switch (def.typeName) {
     case "ZodObject": {
       const outputObject: Record<string, unknown> = {};
@@ -76,7 +80,6 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
     case "ZodNull":
     case "ZodAny":
       return null;
-    case "ZodNullable":
     case "ZodOptional":
       return init(def.innerType);
     // case "ZodUndefined":
@@ -84,9 +87,6 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
     // case "ZodUnknown":
     // case "ZodNever":
     default:
-      if (schema.isNullable()) {
-        return null;
-      }
       return undefined;
   }
 }
