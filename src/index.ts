@@ -124,6 +124,8 @@ export function empty<T extends ZodTypeAny>(schema: T): input<T> {
     case "ZodNullable":
     case "ZodOptional":
       return empty(def.innerType);
+    case "ZodEffects":
+      return empty(def.schema);
     case "ZodLiteral":
       return def.value;
     case "ZodNaN":
