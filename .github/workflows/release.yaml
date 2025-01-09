@@ -7,9 +7,6 @@ on:
     types:
       - completed
 
-permissions:
-  contents: read
-
 jobs:
   release:
     name: Release
