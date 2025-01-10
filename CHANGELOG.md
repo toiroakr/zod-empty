@@ -1,3 +1,12 @@
+## [1.3.3](https://github.com/toiroakr/zod-empty/compare/v1.3.2...v1.3.3) (2025-01-10)
+
+
+### Bug Fixes
+
+* test ([4465ca7](https://github.com/toiroakr/zod-empty/commit/4465ca7b24a7026823e53ec187cf88c05a9d41d3))
+* update init function to handle nullable types and add UUID test case ([fdada69](https://github.com/toiroakr/zod-empty/commit/fdada69528696f7af564d904a49c3cec0827f5e7))
+* update init function to return output type and handle UUID generation for ZodString ([9d7a1b7](https://github.com/toiroakr/zod-empty/commit/9d7a1b72ffde53e150db79c73476a204452f4ba4))
+
 ## [1.3.2](https://github.com/toiroakr/zod-empty/compare/v1.3.1...v1.3.2) (2025-01-08)
 
 
