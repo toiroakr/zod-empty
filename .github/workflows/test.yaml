@@ -31,3 +31,5 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
         if: startsWith(${{ matrix.node-version }}, '16.')
+        # FIXME: This is a workaround for comment on PRs from forks
+        continue-on-error: true
