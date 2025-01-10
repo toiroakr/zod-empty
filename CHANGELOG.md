@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/toiroakr/zod-empty/compare/v1.3.3...v1.3.4) (2025-01-10)
+
+
+### Bug Fixes
+
+* test action fails on PR from forks ([4329f2c](https://github.com/toiroakr/zod-empty/commit/4329f2cbbb7d43ae2059935f98c95bdade9a7aef))
+
 ## [1.3.3](https://github.com/toiroakr/zod-empty/compare/v1.3.2...v1.3.3) (2025-01-10)
 
 
