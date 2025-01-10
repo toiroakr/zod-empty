@@ -1,8 +1,12 @@
 import clone from "just-clone";
-import type { ZodTypeAny, input } from "zod";
+import type { ZodTypeAny, input, output } from "zod";
 
-export function init<T extends ZodTypeAny>(schema: T): input<T> {
+export function init<T extends ZodTypeAny>(schema: T): output<T> {
   const def = schema._def;
+  if (schema.isNullable() && def.typeName !== "ZodDefault") {
+    return null;
+  }
+
   switch (def.typeName) {
     case "ZodObject": {
       const outputObject: Record<string, unknown> = {};
@@ -13,8 +17,16 @@ export function init<T extends ZodTypeAny>(schema: T): input<T> {
     }
     case "ZodRecord":
       return {};
-    case "ZodString":
+    case "ZodString": {
+      if (def.checks) {
+        for (const check of def.checks) {
+          if (check.kind === "uuid") {
+            return crypto.randomUUID();
+          }
+        }
+      }
       return "";
+    }
     case "ZodNumber":
       for (const check of def.checks || []) {
         if (["min", "max"].includes(check.kind)) {
@@ -68,7 +80,6 @@ export function init<T extends ZodTypeAny>(schema: T): input<T> {
     case "ZodNull":
     case "ZodAny":
       return null;
-    case "ZodNullable":
     case "ZodOptional":
       return init(def.innerType);
     // case "ZodUndefined":
@@ -76,9 +87,6 @@ export function init<T extends ZodTypeAny>(schema: T): input<T> {
     // case "ZodUnknown":
     // case "ZodNever":
     default:
-      if (schema.isNullable()) {
-        return null;
-      }
       return undefined;
   }
 }
