@@ -75,15 +75,10 @@
     }
   ],
   "files": [
-    "cjs/**/*",
-    "cjs/**/*.{cjs,mjs,map}",
-    "dts/**/*.d.ts",
-    "esm/**/*",
-    "esm/**/*.{js,map}",
-    "lib/**/*.{js,map}",
-    "mjs/**/*.{mjs,map}",
-    "src/**/*",
-    "src/**/*.{ts,tsx,json}"
+    "src",
+    "cjs",
+    "esm",
+    "!**/*.spec.ts"
   ],
   "release": {
     "plugins": [

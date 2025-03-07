@@ -35,7 +35,7 @@ describe("make empty", () => {
 
   it("bigint", () => {
     const schema = z.bigint();
-    expect(init(schema)).toBe(0);
+    expect(init(schema)).toBe(BigInt(0));
     expect(empty(schema)).toBeNull();
   });
 
@@ -186,6 +186,38 @@ describe("make empty", () => {
     const schema = z.map(z.string(), z.number());
     expect(init(schema)).toEqual(new Map());
     expect(empty(schema)).toEqual(new Map());
+  });
+
+  describe("coerce", () => {
+    it("string", () => {
+      const schema = z.coerce.string();
+      expect(init(schema)).toBe("");
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("number", () => {
+      const schema = z.coerce.number();
+      expect(init(schema)).toBe(0);
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("bigint", () => {
+      const schema = z.coerce.bigint();
+      expect(init(schema)).toBe(BigInt(0));
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("boolean", () => {
+      const schema = z.coerce.boolean();
+      expect(init(schema)).toBe(false);
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("date", () => {
+      const schema = z.coerce.date();
+      expect(init(schema)).toEqual(new Date());
+      expect(empty(schema)).toBeNull();
+    });
   });
 
   describe("default", () => {
