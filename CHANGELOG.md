@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/toiroakr/zod-empty/compare/v1.3.4...v1.4.0) (2025-03-07)
+
+
+### Bug Fixes
+
+* bigint bug ([24517cf](https://github.com/toiroakr/zod-empty/commit/24517cfa7cd002d1af3123f93cc155626d6d368d))
+* files ([907114d](https://github.com/toiroakr/zod-empty/commit/907114dd0b8bdc2b1e3f523856fa39c9a9109810))
+
+
+### Features
+
+* support coerce. ([7a0e1a6](https://github.com/toiroakr/zod-empty/commit/7a0e1a6fea164cf568f91f67f12d63a6af68e576))
+
 ## [1.3.4](https://github.com/toiroakr/zod-empty/compare/v1.3.3...v1.3.4) (2025-01-10)
 
 
