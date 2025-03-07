@@ -35,7 +35,7 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
       }
       return 0;
     case "ZodBigInt":
-      return 0;
+      return BigInt(0);
     case "ZodBoolean":
       return false;
     case "ZodDate":

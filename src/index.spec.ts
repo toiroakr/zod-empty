@@ -35,7 +35,7 @@ describe("make empty", () => {
 
   it("bigint", () => {
     const schema = z.bigint();
-    expect(init(schema)).toBe(0);
+    expect(init(schema)).toBe(BigInt(0));
     expect(empty(schema)).toBeNull();
   });
 
