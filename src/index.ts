@@ -3,7 +3,7 @@ import type { ZodTypeAny, input, output } from "zod";
 
 export function init<T extends ZodTypeAny>(schema: T): output<T> {
   const def = schema._def;
-  if (schema.isNullable() && def.typeName !== "ZodDefault") {
+  if (!def.coerce && schema.isNullable() && def.typeName !== "ZodDefault") {
     return null;
   }
 
