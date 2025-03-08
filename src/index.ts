@@ -1,9 +1,15 @@
 import clone from "just-clone";
-import type { ZodTypeAny, input, output } from "zod";
+import type z from "zod";
 
-export function init<T extends ZodTypeAny>(schema: T): output<T> {
+export function init<T extends z.ZodFirstPartySchemaTypes>(
+  schema: T,
+): z.output<T> {
   const def = schema._def;
-  if (!def.coerce && schema.isNullable() && def.typeName !== "ZodDefault") {
+  if (
+    !("coerce" in def && def.coerce) &&
+    schema.isNullable() &&
+    def.typeName !== "ZodDefault"
+  ) {
     return null;
   }
 
@@ -11,7 +17,7 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
     case "ZodObject": {
       const outputObject: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(def.shape())) {
-        outputObject[key] = init(value as ZodTypeAny);
+        outputObject[key] = init(value as z.ZodFirstPartySchemaTypes);
       }
       return outputObject;
     }
@@ -29,7 +35,7 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
     }
     case "ZodNumber":
       for (const check of def.checks || []) {
-        if (["min", "max"].includes(check.kind)) {
+        if (check.kind === "max" || check.kind === "min") {
           return check.value;
         }
       }
@@ -47,7 +53,7 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
     case "ZodArray":
       return [];
     case "ZodTuple":
-      return def.items.map((item: ZodTypeAny) => init(item));
+      return def.items.map((item: z.ZodTypeAny) => init(item));
     case "ZodSet":
       return new Set();
     case "ZodMap":
@@ -91,13 +97,15 @@ export function init<T extends ZodTypeAny>(schema: T): output<T> {
   }
 }
 
-export function empty<T extends ZodTypeAny>(schema: T): input<T> {
+export function empty<T extends z.ZodFirstPartySchemaTypes>(
+  schema: T,
+): z.input<T> {
   const def = schema._def;
   switch (def.typeName) {
     case "ZodObject": {
       const outputObject: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(def.shape())) {
-        outputObject[key] = empty(value as ZodTypeAny);
+        outputObject[key] = empty(value as z.ZodTypeAny);
       }
       return outputObject;
     }
@@ -106,7 +114,7 @@ export function empty<T extends ZodTypeAny>(schema: T): input<T> {
     case "ZodArray":
       return [];
     case "ZodTuple":
-      return def.items.map((item: ZodTypeAny) => empty(item));
+      return def.items.map((item: z.ZodTypeAny) => empty(item));
     case "ZodSet":
       return new Set();
     case "ZodMap":
