@@ -1,3 +1,11 @@
+## [1.4.1](https://github.com/toiroakr/zod-empty/compare/v1.4.0...v1.4.1) (2025-03-08)
+
+
+### Bug Fixes
+
+* improve type ([b950695](https://github.com/toiroakr/zod-empty/commit/b9506958c6f814a5405b3eaa08a218bcad1e28c1))
+* improve type ([#27](https://github.com/toiroakr/zod-empty/issues/27)) ([f9f95a5](https://github.com/toiroakr/zod-empty/commit/f9f95a51b2cb921985b96d7b0c95a183f7c27c87))
+
 # [1.4.0](https://github.com/toiroakr/zod-empty/compare/v1.3.4...v1.4.0) (2025-03-07)
 
 
