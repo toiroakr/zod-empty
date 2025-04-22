@@ -1,13 +1,15 @@
 {
   "name": "zod-empty",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "generate minimum data from zod schema.",
-  "types": "./cjs/index.d.ts",
-  "main": "./cjs/index.cjs",
-  "module": "./esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "scripts": {
     "prepare": "lefthook install",
-    "build": "packemon pack --addEngines --addExports --declaration",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
     "release": "npm run build && npm publish",
     "check": "biome check --write",
     "check:force": "biome check --write --unsafe",
@@ -46,10 +48,10 @@
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/ui": "2.1.8",
     "lefthook": "^1.10.1",
-    "packemon": "4.1.1",
     "pkg-pr-new": "^0.0.41",
     "semantic-release": "^24.2.1",
-    "typescript": "5.7.2",
+    "typescript": "5.8.3",
+    "unbuild": "^3.5.0",
     "vitest": "2.1.8",
     "vitest-github-actions-reporter": "0.11.1",
     "zod": "^3.24.1"
@@ -58,28 +60,9 @@
     "typescript": "5.x",
     "zod": "3.x"
   },
-  "packemon": [
-    {
-      "inputs": {
-        "index": "./src/index.ts"
-      },
-      "platform": "node",
-      "format": "cjs",
-      "support": "current"
-    },
-    {
-      "inputs": {
-        "index": "./src/index.ts"
-      },
-      "platform": "browser",
-      "support": "current"
-    }
-  ],
   "files": [
-    "cjs",
-    "cjs/**/*",
-    "esm",
-    "esm/**/*",
+    "dist/**/*",
+    "!src/index.spec.ts",
     "src/index.ts"
   ],
   "release": {
@@ -108,22 +91,15 @@
   },
   "exports": {
     "./package.json": "./package.json",
-    "./*": {
-      "types": "./dts/*.d.ts",
-      "node": {
-        "import": "./mjs/*.mjs",
-        "require": "./cjs/*.cjs"
-      }
-    },
     ".": {
       "node": {
-        "types": "./cjs/index.d.ts",
-        "import": "./cjs/index-wrapper.mjs",
-        "default": "./cjs/index.cjs"
+        "types": "./dist/mjs/index.d.ts",
+        "import": "./dist/mjs/index.js",
+        "default": "./dist/cjs/index.js"
       },
       "default": {
-        "types": "./esm/index.d.ts",
-        "import": "./esm/index.js"
+        "types": "./dist/esm/index.d.ts",
+        "import": "./dist/esm/index.js"
       }
     }
   }
