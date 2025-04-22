@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/toiroakr/zod-empty/compare/v1.4.2...v1.4.3) (2025-04-22)
+
+
+### Bug Fixes
+
+* package ([b444070](https://github.com/toiroakr/zod-empty/commit/b444070c72a79e4d198fefbc20886cddf3f161b3))
+
 ## [1.4.2](https://github.com/toiroakr/zod-empty/compare/v1.4.1...v1.4.2) (2025-04-22)
 
 
