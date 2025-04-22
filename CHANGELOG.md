@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/toiroakr/zod-empty/compare/v1.4.3...v1.4.4) (2025-04-22)
+
+
+### Bug Fixes
+
+* export js ([9e3cee2](https://github.com/toiroakr/zod-empty/commit/9e3cee2709fe1f4c62b81c0ad01f8f1ae2082444))
+
 ## [1.4.3](https://github.com/toiroakr/zod-empty/compare/v1.4.2...v1.4.3) (2025-04-22)
 
 
