@@ -80,6 +80,7 @@
     "cjs/**/*",
     "esm",
     "esm/**/*",
+    "src/**/*",
     "src/index.ts"
   ],
   "release": {
