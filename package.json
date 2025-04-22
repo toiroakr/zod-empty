@@ -76,13 +76,11 @@
     }
   ],
   "files": [
-    "!**/*.spec.ts",
     "cjs",
     "cjs/**/*",
     "esm",
     "esm/**/*",
-    "src",
-    "src/**/*"
+    "src/index.ts"
   ],
   "release": {
     "plugins": [
