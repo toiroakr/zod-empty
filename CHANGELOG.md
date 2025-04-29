@@ -1,3 +1,11 @@
+## [1.4.5](https://github.com/toiroakr/zod-empty/compare/v1.4.4...v1.4.5) (2025-04-29)
+
+
+### Bug Fixes
+
+* incorrect exports path in `package.json` ([#29](https://github.com/toiroakr/zod-empty/issues/29)) ([69603a3](https://github.com/toiroakr/zod-empty/commit/69603a3201a61a787cf64938a04a6d5c69ee7394)), closes [#28](https://github.com/toiroakr/zod-empty/issues/28)
+* update module exports ([64bac3f](https://github.com/toiroakr/zod-empty/commit/64bac3f4793792ab585118e9fb2bb39689c53697))
+
 ## [1.4.4](https://github.com/toiroakr/zod-empty/compare/v1.4.3...v1.4.4) (2025-04-22)
 
 
