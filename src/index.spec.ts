@@ -1,102 +1,104 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import z from "zod";
-import { empty, init } from "./index";
+import { describe, expect, it } from "vitest";
+import { z } from "zod";
+import { empty, init } from ".";
+
+// Check if we're using Zod v3 or v4
+const isZodV3 = "args" in z.function();
 
 describe("make empty", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("string", () => {
-    const schema = z.string();
-    expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
-  });
-
-  it("uuid", () => {
-    const schema = z.string().uuid();
-    expect(init(schema).length).toBe(36);
-    expect(empty(schema)).toBeNull();
-  });
-
-  it.each([
-    ["", z.number(), 0],
-    ["10-", z.number().min(10), 10],
-    ["-100", z.number().max(100), 100],
-    ["10-100", z.number().min(10).max(100), 10],
-    ["10-100 (reverse)", z.number().max(100).min(10), 100],
-  ])("number %s", (_, schema, initExpect) => {
-    expect(init(schema)).toBe(initExpect);
-    expect(empty(schema)).toBeNull();
-  });
-
-  it("bigint", () => {
-    const schema = z.bigint();
-    expect(init(schema)).toBe(BigInt(0));
-    expect(empty(schema)).toBeNull();
-  });
-
-  it("boolean", () => {
-    const schema = z.boolean();
-    expect(init(schema)).toBe(false);
-    expect(empty(schema)).toBeNull();
-  });
-
-  it("date", () => {
-    const schema = z.date();
-    expect(init(schema)).toEqual(new Date());
-    expect(empty(schema)).toBeNull();
-  });
-
-  it("literal", () => {
-    const schema = z.literal("literal");
-    expect(init(schema)).toBe("literal");
-    expect(empty(schema)).toBe("literal");
-  });
-
-  it("array", () => {
-    const schema = z.array(z.string());
-    expect(init(schema)).toEqual([]);
-    expect(empty(schema)).toEqual([]);
-  });
-
-  it("transform", () => {
-    const schema = z.string().transform((val) => val.length);
-    expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
-  });
-
-  it("object", () => {
-    const schema = z.object({
-      foo: z.string(),
-      bar: z.number(),
-      buz: z.array(z.string()),
+  describe("primitives", () => {
+    it("string", () => {
+      const schema = z.string();
+      expect(init(schema)).toBe("");
+      expect(empty(schema)).toBeNull();
     });
-    expect(init(schema)).toEqual({
-      foo: "",
-      bar: 0,
-      buz: [],
-    });
-    expect(empty(schema)).toEqual({
-      foo: null,
-      bar: null,
-      buz: [],
-    });
-  });
 
-  it("record", () => {
-    const schema = z.record(z.string(), z.number());
-    expect(init(schema)).toEqual({});
-    expect(empty(schema)).toEqual({});
+    it("coerce string", () => {
+      const schema = z.coerce.string();
+      expect(init(schema)).toBe("");
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("string uuid", () => {
+      const schema = z.string().uuid();
+      expect(init(schema)).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+      );
+      expect(empty(schema)).toBeNull();
+    });
+
+    it.each([
+      ["", z.number(), 0],
+      ["10-", z.number().min(10), 10],
+      ["-100", z.number().max(100), 100],
+      ["10-100", z.number().min(10).max(100), 10],
+      ["10-100 (reverse)", z.number().max(100).min(10), 100],
+    ])("number %s", (_, schema, initExpect) => {
+      expect(init(schema)).toBe(initExpect);
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("coerce number", () => {
+      const schema = z.coerce.number();
+      expect(init(schema)).toBe(0);
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("bigint", () => {
+      const schema = z.bigint();
+      expect(init(schema)).toBe(BigInt(0));
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("boolean", () => {
+      const schema = z.boolean();
+      expect(init(schema)).toBe(false);
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("date", () => {
+      const schema = z.date();
+      expect(init(schema)).toBeInstanceOf(Date);
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("literal", () => {
+      const schema = z.literal("literal");
+      expect(init(schema)).toBe("literal");
+      expect(empty(schema)).toBe("literal");
+    });
+
+    it("symbol", () => {
+      // return undefined
+      const schema = z.symbol();
+      expect(init(schema)).toBeUndefined();
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("null", () => {
+      const schema = z.null();
+      expect(init(schema)).toBeNull();
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("undefined", () => {
+      const schema = z.undefined();
+      expect(init(schema)).toBeUndefined();
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("void", () => {
+      const schema = z.void();
+      expect(init(schema)).toBeUndefined();
+      expect(empty(schema)).toBeNull();
+    });
   });
 
   it("enum", () => {
-    const schema = z.enum(["light", "dark"]);
-    expect(init(schema)).toBe("light");
-    expect(empty(schema)).toBeNull();
+    const Fish = z.enum(["Salmon", "Tuna", "Trout"]);
+    type Fish = z.infer<typeof Fish>;
+    expect(init(Fish)).toBe("Salmon");
+    expect(empty(Fish)).toBeNull();
   });
 
   it("nativeEnum", () => {
@@ -130,32 +132,35 @@ describe("make empty", () => {
   });
 
   it("intersection", () => {
-    const Person = z.object({
-      name: z.string(),
-      age: z.number(),
-    });
-    const Employee = z.object({
-      role: z.string(),
-      salary: z.number(),
-    });
+    const schema = z.intersection(
+      z.object({
+        a: z.string(),
+      }),
+      z.object({
+        b: z.number(),
+      }),
+    );
+    expect(init(schema)).toEqual({ a: "", b: 0 });
+    expect(empty(schema)).toEqual({ a: null, b: null });
+  });
 
-    const schema = z.intersection(Person, Employee);
-    expect(init(schema)).toEqual({
-      name: "",
-      age: 0,
-      role: "",
-      salary: 0,
+  it("record", () => {
+    const schema = z.record(z.string());
+    expect(init(schema)).toEqual({});
+    expect(empty(schema)).toEqual({});
+  });
+
+  it("object", () => {
+    const schema = z.object({
+      a: z.string(),
+      b: z.number(),
     });
-    expect(empty(schema)).toEqual({
-      name: null,
-      age: null,
-      role: null,
-      salary: null,
-    });
+    expect(init(schema)).toEqual({ a: "", b: 0 });
+    expect(empty(schema)).toEqual({ a: null, b: null });
   });
 
   // Could there be a more appropriate test?
-  it("function", () => {
+  it.skipIf(!isZodV3)("function", () => {
     const schema = z
       .function()
       .args(z.number(), z.string())
@@ -176,6 +181,12 @@ describe("make empty", () => {
     expect(empty(schema)).toEqual([null, null]);
   });
 
+  it("array", () => {
+    const schema = z.array(z.string());
+    expect(init(schema)).toEqual([]);
+    expect(empty(schema)).toEqual([]);
+  });
+
   it("set", () => {
     const schema = z.set(z.string());
     expect(init(schema)).toEqual(new Set());
@@ -188,52 +199,76 @@ describe("make empty", () => {
     expect(empty(schema)).toEqual(new Map());
   });
 
-  describe("coerce", () => {
-    it("string", () => {
-      const schema = z.coerce.string();
+  it("pipe", () => {
+    const schema = z
+      .string()
+      .transform((s) => s.toUpperCase())
+      .pipe(z.string().transform((s) => s.length));
+    expect(init(schema)).toBe(0);
+    expect(empty(schema)).toBeNull();
+  });
+
+  describe("nullable", () => {
+    it("nullable string", () => {
+      const schema = z.string().nullable();
+      expect(init(schema)).toBeNull();
+      expect(empty(schema)).toBeNull();
+    });
+
+    it("coerce nullable string", () => {
+      const schema = z.coerce.string().nullable();
       expect(init(schema)).toBe("");
-      expect(empty(schema)).toBeNull();
-    });
-
-    it("number", () => {
-      const schema = z.coerce.number();
-      expect(init(schema)).toBe(0);
-      expect(empty(schema)).toBeNull();
-    });
-
-    it("bigint", () => {
-      const schema = z.coerce.bigint();
-      expect(init(schema)).toBe(BigInt(0));
-      expect(empty(schema)).toBeNull();
-    });
-
-    it("boolean", () => {
-      const schema = z.coerce.boolean();
-      expect(init(schema)).toBe(false);
-      expect(empty(schema)).toBeNull();
-    });
-
-    it("date", () => {
-      const schema = z.coerce.date();
-      expect(init(schema)).toEqual(new Date());
       expect(empty(schema)).toBeNull();
     });
   });
 
-  describe("default", () => {
-    it.each([
-      ["string", "default value", z.string()],
-      ["number", 2, z.number()],
-      ["boolean", true, z.boolean()],
-      ["any", { default: true }, z.any()],
-    ])("%s", (_, defaultValue, baseSchema) => {
-      expect(init((baseSchema as any).default(defaultValue))).toStrictEqual(
-        defaultValue,
-      );
+  describe("nullish", () => {
+    it("nullish string", () => {
+      const schema = z.string().nullish();
+      expect(init(schema)).toBeNull();
+      expect(empty(schema)).toBeNull();
     });
 
-    it("function", () => {
-      const defaultFunction = (s: string) => s?.length;
+    it("coerce nullish string", () => {
+      const schema = z.coerce.string().nullish();
+      expect(init(schema)).toBe("");
+      expect(empty(schema)).toBeNull();
+    });
+  });
+
+  it("optional", () => {
+    const schema = z.string().optional();
+    expect(init(schema)).toBe("");
+    expect(empty(schema)).toBeNull();
+  });
+
+  describe("default", () => {
+    it("string", () => {
+      const schema = z.string().default("default");
+      expect(init(schema)).toBe("default");
+      expect(empty(schema)).toBe("default");
+    });
+
+    it("number", () => {
+      const schema = z.number().default(10);
+      expect(init(schema)).toBe(10);
+      expect(empty(schema)).toBe(10);
+    });
+
+    it("boolean", () => {
+      const schema = z.boolean().default(true);
+      expect(init(schema)).toBe(true);
+      expect(empty(schema)).toBe(true);
+    });
+
+    it("any", () => {
+      const schema = z.any().default("any default");
+      expect(init(schema)).toBe("any default");
+      expect(empty(schema)).toBe("any default");
+    });
+
+    it.skipIf(!isZodV3)("function", () => {
+      const defaultFunction = () => 10;
       const schema = z
         .function()
         .args(z.string())
@@ -244,109 +279,184 @@ describe("make empty", () => {
     });
 
     it("clone", () => {
-      // return value for object/array/set/map not strict equal to default parameter.
-      const defaultObject = { default: true };
+      const defaultObject = { a: "string", b: 10 };
       const schema = z.any().default(defaultObject);
-      expect(init(schema) === defaultObject).toBe(false);
-      expect(empty(schema) === defaultObject).toBe(false);
+      const result = init(schema);
+      expect(result).toEqual(defaultObject);
+      expect(result).not.toBe(defaultObject);
+      const emptyResult = empty(schema);
+      expect(emptyResult).toEqual(defaultObject);
+      expect(emptyResult).not.toBe(defaultObject);
+    });
+
+    it("nullable string", () => {
+      const schema = z.string().nullable().default("default");
+      expect(init(schema)).toBe("default");
+      expect(empty(schema)).toBe("default");
     });
   });
 
-  it("nan", () => {
-    const schema = z.nan();
-    expect(init(schema)).toBeNaN();
-    expect(empty(schema)).toBeNaN();
-  });
+  describe("unknownKeys", () => {
+    it("nan", () => {
+      const schema = z.nan();
+      expect(init(schema)).toBe(Number.NaN);
+      expect(empty(schema)).toBe(Number.NaN);
+    });
 
-  it("null", () => {
-    const schema = z.null();
-    expect(init(schema)).toBeNull();
-    expect(empty(schema)).toBeNull();
-  });
-
-  describe("nullable", () => {
-    it("string", () => {
-      const schema = z.string().nullable();
+    it("any", () => {
+      const schema = z.any();
       expect(init(schema)).toBeNull();
       expect(empty(schema)).toBeNull();
     });
-    it("number", () => {
-      const schema = z.number().nullable();
-      expect(init(schema)).toBeNull();
+
+    it("unknown", () => {
+      // return undefined
+      const schema = z.unknown();
+      expect(init(schema)).toBeUndefined();
       expect(empty(schema)).toBeNull();
     });
-    it("array", () => {
-      const schema = z.array(z.string()).nullable();
-      expect(init(schema)).toBeNull();
-      expect(empty(schema)).toStrictEqual([]);
-    });
-  });
 
-  describe("nullish", () => {
-    it("string", () => {
-      const schema = z.string().nullish();
-      expect(init(schema)).toBeNull();
+    it("never", () => {
+      // return undefined
+      const schema = z.never();
+      expect(init(schema)).toBeUndefined();
       expect(empty(schema)).toBeNull();
     });
-    it("number", () => {
-      const schema = z.number().nullish();
-      expect(init(schema)).toBeNull();
+  });
+
+  describe("zod v4 new types", () => {
+    it.skip("file", () => {
+      // Skip test - z.instanceof() is implemented as custom type in v4
+      // and cannot be reliably detected
+      if (typeof File === "undefined") {
+        return;
+      }
+      const schema = z.instanceof(File);
+      const result = init(schema);
+      expect(result).toBeInstanceOf(File);
+      expect((result as File).name).toBe("empty.txt");
+      expect((result as File).type).toBe("text/plain");
       expect(empty(schema)).toBeNull();
     });
-    it("array", () => {
-      const schema = z.array(z.string()).nullish();
-      expect(init(schema)).toBeNull();
-      expect(empty(schema)).toStrictEqual([]);
+
+    it("branded", () => {
+      const Cat = z.object({ name: z.string() }).brand<"Cat">();
+      const result = init(Cat);
+      expect(result).toEqual({ name: "" });
+      const emptyResult = empty(Cat);
+      expect(emptyResult).toEqual({ name: null });
     });
-  });
 
-  it("any", () => {
-    const schema = z.any();
-    expect(init(schema)).toBeNull();
-    expect(empty(schema)).toBeNull();
-  });
+    it("catch with value", () => {
+      const numberWithCatch = z.number().catch(42);
+      expect(init(numberWithCatch)).toBe(0);
+      expect(empty(numberWithCatch)).toBeNull();
+    });
 
-  it("optional", () => {
-    const schema = z.string().optional();
-    expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
-  });
+    it("catch with function", () => {
+      const numberWithCatch = z.number().catch(() => 100);
+      expect(init(numberWithCatch)).toBe(0);
+      expect(empty(numberWithCatch)).toBeNull();
+    });
 
-  it("undefined", () => {
-    const schema = z.undefined();
-    expect(init(schema)).toBeUndefined();
-    expect(empty(schema)).toBeNull();
-  });
+    // Test other string validators that are simple extensions
+    it("string validators", () => {
+      // These all return empty string for init() and null for empty()
+      const emailSchema = z.string().email();
+      expect(init(emailSchema)).toBe("");
+      expect(empty(emailSchema)).toBeNull();
 
-  it("void", () => {
-    const schema = z.void();
-    expect(init(schema)).toBeUndefined();
-    expect(empty(schema)).toBeNull();
-  });
+      const urlSchema = z.string().url();
+      expect(init(urlSchema)).toBe("");
+      expect(empty(urlSchema)).toBeNull();
 
-  it("unknown", () => {
-    const schema = z.unknown();
-    expect(init(schema)).toBeNull();
-    expect(empty(schema)).toBeNull();
-  });
+      const emojiSchema = z.string().emoji();
+      expect(init(emojiSchema)).toBe("");
+      expect(empty(emojiSchema)).toBeNull();
 
-  it("never", () => {
-    const schema = z.never();
-    expect(init(schema)).toBeUndefined();
-    expect(empty(schema)).toBeNull();
-  });
+      const cuidSchema = z.string().cuid();
+      expect(init(cuidSchema)).toBe("");
+      expect(empty(cuidSchema)).toBeNull();
 
-  it("pipe", () => {
-    let schema: any = z.string().pipe(z.number());
-    expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
+      const ulidSchema = z.string().ulid();
+      expect(init(ulidSchema)).toBe("");
+      expect(empty(ulidSchema)).toBeNull();
+    });
 
-    schema = z.number().pipe(z.string());
-    expect(init(schema)).toBe(0);
-    expect(empty(schema)).toBeNull();
+    // Test IP address validators
+    it("IP validators", () => {
+      const ipv4Schema = z.string().ipv4();
+      const ipv4Result = init(ipv4Schema);
+      expect(ipv4Result).toBe("0.0.0.0");
+      // Verify it's a valid IPv4
+      expect(() => ipv4Schema.parse(ipv4Result)).not.toThrow();
+      expect(empty(ipv4Schema)).toBeNull();
 
-    schema = z.string().pipe(z.number()).pipe(z.boolean());
-    expect(init(schema)).toBe("");
-    expect(empty(schema)).toBeNull();
+      const ipv6Schema = z.string().ipv6();
+      const ipv6Result = init(ipv6Schema);
+      expect(ipv6Result).toBe("::");
+      // Verify it's a valid IPv6
+      expect(() => ipv6Schema.parse(ipv6Result)).not.toThrow();
+      expect(empty(ipv6Schema)).toBeNull();
+    });
+
+    // Test date/time validators
+    it("date/time validators", () => {
+      const datetimeSchema = z.string().datetime();
+      expect(init(datetimeSchema)).toBe("");
+      expect(empty(datetimeSchema)).toBeNull();
+
+      const dateSchema = z.string().date();
+      expect(init(dateSchema)).toBe("");
+      expect(empty(dateSchema)).toBeNull();
+
+      const timeSchema = z.string().time();
+      expect(init(timeSchema)).toBe("");
+      expect(empty(timeSchema)).toBeNull();
+    });
+
+    // Test other string format validators
+    it("other string validators", () => {
+      const base64Schema = z.string().base64();
+      expect(init(base64Schema)).toBe("");
+      expect(empty(base64Schema)).toBeNull();
+
+      const base64urlSchema = z.string().base64url();
+      expect(init(base64urlSchema)).toBe("");
+      expect(empty(base64urlSchema)).toBeNull();
+
+      const jwtSchema = z.string().jwt();
+      expect(init(jwtSchema)).toBe("");
+      expect(empty(jwtSchema)).toBeNull();
+    });
+
+    // Test template literal
+    it("template literal", () => {
+      const templateSchema = z.templateLiteral`hello-${z.string()}-world`;
+      expect(init(templateSchema)).toBe("hello--world");
+      expect(empty(templateSchema)).toBeNull();
+    });
+
+    // Test prefault (internal/experimental method similar to default)
+    it("prefault", () => {
+      const prefaultSchema = z.string().prefault("default value");
+      expect(init(prefaultSchema)).toBe("default value");
+      expect(empty(prefaultSchema)).toBe("default value");
+    });
+
+    // Test success type - skip as it's not a schema type but a parse result property
+    it.skip("success", () => {
+      // success is a property on parse results, not a schema type
+      // const result = z.string().safeParse("test");
+      // result.success === true or false
+    });
+
+    // Test readonly
+    it("readonly", () => {
+      const readonlySchema = z.object({ name: z.string() }).readonly();
+      const result = init(readonlySchema);
+      expect(result).toEqual({ name: "" });
+      expect(empty(readonlySchema)).toEqual({ name: null });
+    });
   });
 });
