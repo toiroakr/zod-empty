@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/toiroakr/zod-empty/compare/v1.4.5...v1.5.0) (2025-07-28)
+
+
+### Features
+
+* update version to 2.0.0 and enhance ZodDefWithShape interface ([6eb0bab](https://github.com/toiroakr/zod-empty/commit/6eb0bab031437cb8fa8768f45af3ad6955efceeb))
+
 ## [1.4.5](https://github.com/toiroakr/zod-empty/compare/v1.4.4...v1.4.5) (2025-04-29)
 
 
