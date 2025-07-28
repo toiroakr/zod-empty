@@ -9,6 +9,8 @@ Same motivation as [json-schema-empty](https://github.com/romeovs/json-schema-em
 
 > All libraries that generate data from a json-schema I could find generate random data that conforms to a json schema. This is nice for testing but is not well-suited for generating default data for forms for example.
 
+If you’re using Zod 3, please switch to [zod-empty@1](https://github.com/toiroakr/zod-empty/tree/v1).
+
 ## Usage
 
 To install zod-empty, run:
