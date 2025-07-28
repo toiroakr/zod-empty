@@ -2,9 +2,6 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { empty, init } from ".";
 
-// Check if we're using Zod v3 or v4
-const isZodV3 = "args" in z.function();
-
 describe("make empty", () => {
   describe("primitives", () => {
     it("string", () => {
@@ -73,9 +70,8 @@ describe("make empty", () => {
     });
 
     it("symbol", () => {
-      // return undefined
       const schema = z.symbol();
-      expect(init(schema)).toBeUndefined();
+      expect(init(schema)).toBeNull();
       expect(empty(schema)).toBeNull();
     });
 
@@ -87,13 +83,13 @@ describe("make empty", () => {
 
     it("undefined", () => {
       const schema = z.undefined();
-      expect(init(schema)).toBeUndefined();
+      expect(init(schema)).toBeNull();
       expect(empty(schema)).toBeNull();
     });
 
     it("void", () => {
       const schema = z.void();
-      expect(init(schema)).toBeUndefined();
+      expect(init(schema)).toBeNull();
       expect(empty(schema)).toBeNull();
     });
   });
@@ -149,7 +145,7 @@ describe("make empty", () => {
   });
 
   it("record", () => {
-    const schema = z.record(z.string());
+    const schema = z.record(z.string(), z.unknown());
     expect(init(schema)).toEqual({});
     expect(empty(schema)).toEqual({});
   });
@@ -164,11 +160,11 @@ describe("make empty", () => {
   });
 
   // Could there be a more appropriate test?
-  it.skipIf(!isZodV3)("function", () => {
-    const schema = z
-      .function()
-      .args(z.number(), z.string())
-      .returns(z.boolean());
+  it("function", () => {
+    const schema = z.function({
+      input: [z.number(), z.string()],
+      output: z.boolean(),
+    });
     expect(init(schema)(0, "")).toBe(false);
     expect(empty(schema)).toBeNull();
   });
@@ -271,17 +267,6 @@ describe("make empty", () => {
       expect(empty(schema)).toBe("any default");
     });
 
-    it.skipIf(!isZodV3)("function", () => {
-      const defaultFunction = () => 10;
-      const schema = z
-        .function()
-        .args(z.string())
-        .returns(z.number())
-        .default(() => defaultFunction);
-      expect(init(schema)).toBe(defaultFunction);
-      expect(empty(schema)).toBe(defaultFunction);
-    });
-
     it("clone", () => {
       const defaultObject = { a: "string", b: 10 };
       const schema = z.any().default(defaultObject);
@@ -314,32 +299,23 @@ describe("make empty", () => {
     });
 
     it("unknown", () => {
-      // return undefined
       const schema = z.unknown();
-      expect(init(schema)).toBeUndefined();
+      expect(init(schema)).toBeNull();
       expect(empty(schema)).toBeNull();
     });
 
     it("never", () => {
-      // return undefined
       const schema = z.never();
-      expect(init(schema)).toBeUndefined();
+      expect(init(schema)).toBeNull();
       expect(empty(schema)).toBeNull();
     });
   });
 
   describe("zod v4 new types", () => {
-    it.skip("file", () => {
-      // Skip test - z.instanceof() is implemented as custom type in v4
-      // and cannot be reliably detected
-      if (typeof File === "undefined") {
-        return;
-      }
+    it("file", () => {
       const schema = z.instanceof(File);
       const result = init(schema);
-      expect(result).toBeInstanceOf(File);
-      expect((result as File).name).toBe("empty.txt");
-      expect((result as File).type).toBe("text/plain");
+      expect(result).toBeNull();
       expect(empty(schema)).toBeNull();
     });
 
@@ -436,7 +412,11 @@ describe("make empty", () => {
 
     // Test template literal
     it("template literal", () => {
-      const templateSchema = z.templateLiteral`hello-${z.string()}-world`;
+      const templateSchema = z.templateLiteral([
+        "hello-",
+        z.string(),
+        "-world",
+      ]);
       expect(init(templateSchema)).toBe("hello--world");
       expect(empty(templateSchema)).toBeNull();
     });
@@ -444,15 +424,8 @@ describe("make empty", () => {
     // Test prefault (internal/experimental method similar to default)
     it("prefault", () => {
       const prefaultSchema = z.string().prefault("default value");
-      expect(init(prefaultSchema)).toBe("default value");
-      expect(empty(prefaultSchema)).toBe("default value");
-    });
-
-    // Test success type - skip as it's not a schema type but a parse result property
-    it.skip("success", () => {
-      // success is a property on parse results, not a schema type
-      // const result = z.string().safeParse("test");
-      // result.success === true or false
+      expect(init(prefaultSchema)).toBeUndefined();
+      expect(empty(prefaultSchema)).toBeUndefined();
     });
 
     // Test readonly

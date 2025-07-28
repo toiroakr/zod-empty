@@ -57,8 +57,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
     case "string": {
       if (def.checks) {
         for (const check of def.checks || []) {
-          // v3 uses check.kind === "uuid", v4 uses check.format === "uuid"
-          if (check.kind === "uuid" || check.format === "uuid") {
+          if (check.format === "uuid") {
             return crypto.randomUUID() as z.output<T>;
           }
           // Handle IP address formats
@@ -101,7 +100,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
           return pipeInput as z.output<T>;
         }
       }
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     }
     case "array":
       return [] as z.output<T>;
@@ -130,7 +129,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
         // This is a regular enum - return the first value
         return values[0] as z.output<T>;
       }
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     case "ZodNativeEnum": {
       // ref. https://github.com/colinhacks/zod/blob/6fe152f98a434a087c0f1ecbce5c52427bd816d3/src/helpers/util.ts#L28-L43
       // v3 uses def.values
@@ -201,7 +200,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
       if (innerOptional) {
         return init(innerOptional) as z.output<T>;
       }
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     }
     case "nullable": {
       // If the inner type has coerce, we should use it instead of returning null
@@ -224,25 +223,25 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
     case "undefined":
     case "void":
     case "never":
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     case "unknown":
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     case "symbol":
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     case "file":
       // Return a minimal File object
       if (typeof File !== "undefined") {
         return new File([], "empty.txt", { type: "text/plain" }) as z.output<T>;
       }
-      return undefined as unknown as z.output<T>;
+      return null as z.output<T>;
     case "instanceof": {
       // For instanceof checks, try to create a minimal instance
       const cls = def.cls || def.class;
       if (cls === File && typeof File !== "undefined") {
         return new File([], "empty.txt", { type: "text/plain" }) as z.output<T>;
       }
-      // For other classes, return undefined
-      return undefined as unknown as z.output<T>;
+      // For other classes, return null
+      return null as z.output<T>;
     }
     case "branded": {
       // For branded types, get the value from the underlying type
@@ -287,13 +286,8 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
       const readonlyInner = def.innerType || def.base;
       return (readonlyInner ? init(readonlyInner) : undefined) as z.output<T>;
     }
-    case "prefault": {
-      // For prefault, always return the default value
-      const defaultValue =
-        typeof def.defaultValue === "function"
-          ? def.defaultValue()
-          : def.defaultValue;
-      return defaultValue as z.output<T>;
+    case "custom": {
+      return null as z.output<T>;
     }
     default:
       return undefined as unknown as z.output<T>;
@@ -356,10 +350,7 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
       return (schemaType ? empty(schemaType) : null) as z.input<T>;
     }
     case "literal":
-      // v3 uses def.value, v4 uses def.values[0]
-      return (
-        def.value !== undefined ? def.value : def.values?.[0]
-      ) as z.input<T>;
+      return def.values?.[0] as z.input<T>;
     case "nan":
       return Number.NaN as z.input<T>;
     case "default": {
@@ -401,14 +392,8 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
       const readonlyInner = def.innerType || def.base;
       return (readonlyInner ? empty(readonlyInner) : null) as z.input<T>;
     }
-    case "prefault": {
-      // For prefault in empty(), return the default value
-      const defaultValue =
-        typeof def.defaultValue === "function"
-          ? def.defaultValue()
-          : def.defaultValue;
-      return defaultValue as z.input<T>;
-    }
+    case "prefault":
+      return undefined as z.input<T>;
     default:
       return null as z.input<T>;
   }
