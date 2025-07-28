@@ -29,10 +29,14 @@ describe("make empty", () => {
 
     it.each([
       ["", z.number(), 0],
-      ["10-", z.number().min(10), 10],
-      ["-100", z.number().max(100), 100],
-      ["10-100", z.number().min(10).max(100), 10],
-      ["10-100 (reverse)", z.number().max(100).min(10), 100],
+      ["10 < x", z.number().min(10), 10],
+      ["10 <= x", z.number().gte(10), 10],
+      ["x < 100", z.number().max(100), 100],
+      ["x <= 100", z.number().lte(100), 100],
+      ["10 < x < 100", z.number().min(10).max(100), 10],
+      ["10 <= x <= 100", z.number().gte(10).lte(100), 10],
+      ["100 > x > 100", z.number().max(100).min(10), 100],
+      ["100 >= x >= 100", z.number().lte(100).gte(10), 100],
     ])("number %s", (_, schema, initExpect) => {
       expect(init(schema)).toBe(initExpect);
       expect(empty(schema)).toBeNull();

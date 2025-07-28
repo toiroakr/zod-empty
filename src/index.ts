@@ -28,7 +28,7 @@ interface ZodDefWithShape {
     kind?: string;
     format?: string;
     value?: number;
-    _zod?: { def?: { value?: number } };
+    _zod?: { def?: { check?: string; value?: number } };
     constructor?: { name?: string };
   }>;
   parts?: (string | number | z.ZodType)[];
@@ -80,33 +80,17 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
       // Look at checks in order to return the first constraint value
       for (const check of def.checks || []) {
         // v3 has check.kind and check.value
-        if (check.kind === "max" || check.kind === "min") {
+        if (["max", "min"].includes(check.kind ?? "")) {
           return check.value as z.output<T>;
         }
         // v4 uses _zod.def structure
-        if (check._zod?.def?.value !== undefined) {
+        if (
+          check._zod?.def &&
+          ["greater_than", "less_than"].includes(check._zod?.def?.check ?? "")
+        ) {
           return check._zod.def.value as z.output<T>;
         }
-        // v4 alternative: check the check type and use schema properties
-        const checkStr = check.constructor?.name || check.toString();
-        if (
-          checkStr.includes("GreaterThan") &&
-          "minValue" in schema &&
-          (schema as z.ZodType & { minValue?: number }).minValue !==
-            Number.NEGATIVE_INFINITY
-        ) {
-          return (schema as z.ZodType & { minValue?: number })
-            .minValue as z.output<T>;
-        }
-        if (
-          checkStr.includes("LessThan") &&
-          "maxValue" in schema &&
-          (schema as z.ZodType & { maxValue?: number }).maxValue !==
-            Number.POSITIVE_INFINITY
-        ) {
-          return (schema as z.ZodType & { maxValue?: number })
-            .maxValue as z.output<T>;
-        }
+        return undefined as unknown as z.output<T>;
       }
       return 0 as z.output<T>;
     case "ZodBigInt":
