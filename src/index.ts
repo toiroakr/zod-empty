@@ -130,18 +130,6 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
         return values[0] as z.output<T>;
       }
       return null as z.output<T>;
-    case "ZodNativeEnum": {
-      // ref. https://github.com/colinhacks/zod/blob/6fe152f98a434a087c0f1ecbce5c52427bd816d3/src/helpers/util.ts#L28-L43
-      // v3 uses def.values
-      const values = (def.values || {}) as Record<string, unknown>;
-      // For numeric enums, we want to return the numeric values, not the reverse mapped strings
-      return Object.values(values).filter(
-        (value) =>
-          typeof (values as Record<string, unknown>)[
-            value as string | number
-          ] !== "number",
-      )[0] as z.output<T>;
-    }
     case "union": {
       const options = def.options as z.ZodType[] | undefined;
       return (options?.[0] ? init(options[0]) : undefined) as z.output<T>;
