@@ -1,6 +1,6 @@
 {
   "name": "zod-empty",
-  "version": "1.4.5",
+  "version": "1.5.2",
   "description": "generate minimum data from zod schema.",
   "types": "./dist/esm/index.d.ts",
   "main": "./dist/cjs/index.js",
@@ -10,7 +10,7 @@
     "build": "npm run build:cjs && npm run build:esm",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "release": "npm run build && npm publish",
+    "release": "npm run build && npm publish --tag=zod3",
     "check": "biome check --write",
     "check:force": "biome check --write --unsafe",
     "test": "vitest",
