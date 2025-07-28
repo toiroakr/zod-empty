@@ -14,7 +14,7 @@ Same motivation as [json-schema-empty](https://github.com/romeovs/json-schema-em
 To install zod-empty, run:
 
 ```shell
-npm install zod-empty
+npm install zod-empty@zod3
 ```
 
 ### [with react-hook-form](samples/react-hook-form)
