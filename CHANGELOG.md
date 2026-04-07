@@ -1,3 +1,28 @@
+# [2.1.0](https://github.com/toiroakr/zod-empty/compare/v2.0.0...v2.1.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* clear NODE_AUTH_TOKEN for OIDC trusted publishing ([a524cd1](https://github.com/toiroakr/zod-empty/commit/a524cd139e62943e10e956a97065d40e5b0b3781))
+* clear NODE_AUTH_TOKEN for OIDC trusted publishing ([#40](https://github.com/toiroakr/zod-empty/issues/40)) ([c10a555](https://github.com/toiroakr/zod-empty/commit/c10a555cca4eb2c84298676defc8505f434bda0a))
+* remove registry-url to enable OIDC trusted publishing ([c96a381](https://github.com/toiroakr/zod-empty/commit/c96a381f0fdb0a9e78370193c144a04c2f635c39))
+* remove registry-url to enable OIDC trusted publishing ([#39](https://github.com/toiroakr/zod-empty/issues/39)) ([2d179f1](https://github.com/toiroakr/zod-empty/commit/2d179f172663a57f0a8dc1598f4e7e53d6d32957))
+* skip npm verifyConditions for trusted publishing ([311f0bd](https://github.com/toiroakr/zod-empty/commit/311f0bd9c24133238aba9e748dd3fe1b6fd4f91b))
+* skip npm verifyConditions for trusted publishing ([#37](https://github.com/toiroakr/zod-empty/issues/37)) ([3424393](https://github.com/toiroakr/zod-empty/commit/3424393f7713a80a17388fbea8ee11526d0ec127))
+* upgrade @semantic-release/npm to v13 for OIDC support ([9c386d2](https://github.com/toiroakr/zod-empty/commit/9c386d2a44164df1d2f9bb17a4ce84ecbd82bdb2))
+* upgrade @semantic-release/npm to v13 for OIDC trusted publishing ([#38](https://github.com/toiroakr/zod-empty/issues/38)) ([e78a7c2](https://github.com/toiroakr/zod-empty/commit/e78a7c288a0d6740b6e39b2dac9f8c17649225bf))
+* upgrade semantic-release to v25 for OIDC support ([5fe3d1c](https://github.com/toiroakr/zod-empty/commit/5fe3d1c614cc919625cfd8fce564c8c7af1fb8f0))
+* upgrade semantic-release to v25 for OIDC support ([#42](https://github.com/toiroakr/zod-empty/issues/42)) ([be89c10](https://github.com/toiroakr/zod-empty/commit/be89c109cb59f686808906fffdeec15d8f2532cf))
+* upgrade to actions v6 and remove NODE_AUTH_TOKEN ([25b12f1](https://github.com/toiroakr/zod-empty/commit/25b12f1489d4000e2abc2633a2b5fed991ded788))
+* upgrade to actions v6 and remove NODE_AUTH_TOKEN for OIDC ([#41](https://github.com/toiroakr/zod-empty/issues/41)) ([1be270b](https://github.com/toiroakr/zod-empty/commit/1be270b18f3681733efc2d3c86902370f705080e))
+
+
+### Features
+
+* add support for TypeScript 6 in peerDependencies ([e806055](https://github.com/toiroakr/zod-empty/commit/e8060553fc390164fac96f209b057446c922d8b1))
+* add TypeScript 6 support ([#35](https://github.com/toiroakr/zod-empty/issues/35)) ([f63be85](https://github.com/toiroakr/zod-empty/commit/f63be85709eaa853b1ec8d9296a4e2e2ae73b43d))
+* upgrade devDependencies TypeScript to 6.0.2 ([0aa90f9](https://github.com/toiroakr/zod-empty/commit/0aa90f9d945ed1df6cbdce981aece33f05970e9c))
+
 # [1.5.0](https://github.com/toiroakr/zod-empty/compare/v1.4.5...v1.5.0) (2025-07-28)
 
 
