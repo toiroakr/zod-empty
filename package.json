@@ -57,7 +57,7 @@
     "zod": "^4.0.5"
   },
   "peerDependencies": {
-    "typescript": "5.x",
+    "typescript": ">=5.x",
     "zod": "4.x"
   },
   "files": [
