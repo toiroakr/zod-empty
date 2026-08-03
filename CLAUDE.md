@@ -59,6 +59,6 @@ The library is a single-module TypeScript project with dual module format suppor
 
 ### Release Process
 - Versioning and publishing are driven by changesets
-- Every PR that needs a release must add a changeset with `pnpm changeset`; use `pnpm changeset add --empty` for changes that need none
+- A PR that changes the published package must add a changeset with `pnpm changeset`. Changes that do not reach consumers (CI, repo tooling, docs) need no changeset at all — nothing enforces their presence, and the Release workflow simply finds nothing to publish
 - On push to `main`, the Release workflow opens or updates a `chore: release` PR; merging that PR publishes to npm and creates a GitHub Release
 - Publishing uses npm OIDC trusted publishing with provenance, so no npm token is involved. `registry-url` must stay off `actions/setup-node` in `release.yml` — it writes an `.npmrc` with an empty auth token and breaks OIDC
