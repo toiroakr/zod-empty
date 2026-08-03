@@ -5,33 +5,61 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
-  id-token: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
+      - uses: pnpm/action-setup@v6
+        with:
+          standalone: true
+          run_install: false
+
+      # Deliberately no registry-url: it makes setup-node write an .npmrc with an
+      # empty _authToken, which breaks npm OIDC trusted publishing. See c96a381.
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - run: npm run build
+      - name: Build
+        run: pnpm run build
 
-      - run: npm test -- --run
+      - name: Test
+        run: pnpm test
 
-      - name: Release
-        run: npx semantic-release
+      - name: Create Release PR or Publish
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          publish: pnpm changeset publish
+          title: "chore: release"
+          commit: "chore: release"
+          commitMode: "github-api"
+          createGithubReleases: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          NPM_CONFIG_PROVENANCE: "true"

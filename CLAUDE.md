@@ -12,28 +12,30 @@ Primary use case is generating default values for forms, particularly with React
 
 ## Common Development Commands
 
+This repository uses **pnpm** (pinned via the `packageManager` field). Do not use npm or yarn.
+
 ### Build
 ```bash
-npm run build        # Build both CJS and ESM formats
-npm run build:cjs    # Build CommonJS format only
-npm run build:esm    # Build ES Module format only
+pnpm build           # Build both CJS and ESM formats with tsdown
 ```
 
 ### Testing
 ```bash
-npm test             # Run tests with Vitest
-npm run coverage     # Run tests with coverage report
+pnpm test            # Run tests once with Vitest
+pnpm test:watch      # Run tests in watch mode
+pnpm coverage        # Run tests with coverage report
 ```
 
 ### Code Quality
 ```bash
-npm run check        # Format and lint with Biome
-npm run check:force  # Format and lint with unsafe fixes
+pnpm check           # Format and lint with Biome
+pnpm check:force     # Format and lint with unsafe fixes
 ```
 
 ### Release
 ```bash
-npm run release      # Build and publish (used by CI/CD)
+pnpm changeset       # Record a changeset describing your change
+pnpm release         # Build and publish (used by CI/CD)
 ```
 
 ## Architecture
@@ -56,6 +58,7 @@ The library is a single-module TypeScript project with dual module format suppor
 - Tests verify both `init()` and `empty()` behavior for each schema type
 
 ### Release Process
-- Automated semantic release via GitHub Actions
-- Commits following conventional commit format trigger releases
-- Automatic changelog generation and npm publishing
+- Versioning and publishing are driven by changesets
+- Every PR that needs a release must add a changeset with `pnpm changeset`; use `pnpm changeset add --empty` for changes that need none
+- On push to `main`, the Release workflow opens or updates a `chore: release` PR; merging that PR publishes to npm and creates a GitHub Release
+- Publishing uses npm OIDC trusted publishing with provenance, so no npm token is involved. `registry-url` must stay off `actions/setup-node` in `release.yml` — it writes an `.npmrc` with an empty auth token and breaks OIDC
