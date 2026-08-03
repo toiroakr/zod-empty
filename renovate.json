@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", ":automergeMinor", ":dependencyDashboard"],
+  "labels": ["dependencies"],
+  "minimumReleaseAge": "7 days",
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
+    {
+      "groupName": "testing",
+      "matchPackageNames": ["vitest", "@vitest/*"]
+    },
+    {
+      "groupName": "linting and formatting",
+      "matchPackageNames": ["@biomejs/biome"]
+    },
+    {
+      "groupName": "typescript",
+      "matchPackageNames": ["typescript", "@types/*"]
+    }
+  ]
+}
