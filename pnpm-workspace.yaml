@@ -1,3 +1,6 @@
+minimumReleaseAge: 10080
+minimumReleaseAgeStrict: true
+
 allowBuilds:
   '@biomejs/biome': true
   esbuild: true
