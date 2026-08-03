@@ -65,7 +65,7 @@
     "provenance": true
   },
   "engines": {
-    "node": ">=20.10.0"
+    "node": ">=22.13"
   },
   "exports": {
     "./package.json": "./package.json",
