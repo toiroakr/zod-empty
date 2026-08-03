@@ -1,5 +1,13 @@
 # zod-empty
 
+## 2.2.0
+
+### Minor Changes
+
+- 3556284: Raise the minimum supported Node.js version to 22.13.
+
+  Node 20 reached end of life on 2026-04-30, and the release toolchain now requires 22.13 or newer. The published output is unchanged: the build target moved from `node20.10.0` to `node22.13.0`, but tsdown emits byte-identical files.
+
 ## [2.1.0](https://github.com/toiroakr/zod-empty/compare/v2.0.0...v2.1.0) (2026-04-07)
 
 ### Bug Fixes
