@@ -17,7 +17,7 @@ pre-commit:
   commands:
     check:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: git stash -k && npx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files} && git stash pop
+      run: git stash -k && pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files} && git stash pop
     test:
       glob: "*.{ts,mts,tsx}"
-      run: npm test -- --run
+      run: pnpm test

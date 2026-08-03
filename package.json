@@ -2,16 +2,19 @@
   "name": "zod-empty",
   "version": "2.1.0",
   "description": "generate minimum data from zod schema.",
+  "packageManager": "pnpm@11.18.0",
   "types": "./dist/index.d.mts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "scripts": {
     "prepare": "lefthook install",
     "build": "tsdown",
-    "release": "npm run build && npm publish",
+    "changeset": "changeset",
+    "release": "pnpm build && changeset publish",
     "check": "biome check --write",
     "check:force": "biome check --write --unsafe",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "coverage": "vitest run --coverage"
   },
   "repository": {
@@ -35,19 +38,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/commit-analyzer": "13.0.1",
-    "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "11.0.1",
-    "@semantic-release/npm": "^13.1.5",
-    "@semantic-release/release-notes-generator": "14.0.3",
+    "@changesets/cli": "^2.31.1",
     "@typescript-eslint/eslint-plugin": "5.32.0",
     "@typescript-eslint/parser": "5.32.0",
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/ui": "2.1.8",
     "lefthook": "^1.10.1",
     "pkg-pr-new": "^0.0.41",
-    "semantic-release": "^25.0.3",
     "tsdown": "^0.21.7",
     "typescript": "6.0.2",
     "vitest": "2.1.8",
@@ -63,30 +60,12 @@
     "!src/index.spec.ts",
     "src/index.ts"
   ],
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/github",
-      "@semantic-release/git"
-    ],
-    "branches": [
-      "main"
-    ]
-  },
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
   "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=8.1.0"
-  },
-  "volta": {
-    "node": "16.16.0",
-    "npm": "8.16.0"
+    "node": ">=20.10.0"
   },
   "exports": {
     "./package.json": "./package.json",
