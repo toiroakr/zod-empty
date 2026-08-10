@@ -4,10 +4,12 @@
   "labels": ["dependencies"],
   "minimumReleaseAge": "7 days",
   "prConcurrentLimit": 5,
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
-      "automerge": true
+      "automerge": true,
+      "rangeStrategy": "bump"
     },
     {
       "groupName": "testing",
