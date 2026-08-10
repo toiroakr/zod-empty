@@ -1,0 +1,144 @@
+name: Add changeset for Renovate PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  detect:
+    name: Detect changeset requirement
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout the PR head; this job never has secrets
+
+    # `|` rather than `>-`: actrun's YAML parser chokes on folded scalars here.
+    if: |
+      startsWith(github.event.pull_request.head.ref, 'renovate/') &&
+      github.event.pull_request.user.login == 'renovate[bot]' &&
+      github.event.pull_request.user.type == 'Bot'
+
+    outputs:
+      changed: ${{ steps.runtime.outputs.changed }}
+      content: ${{ steps.content.outputs.content }}
+
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Default ref on pull_request events is the merge ref
+          # (refs/pull/N/merge), which is PR head merged with the *current* base
+          # branch tip. That pulls in unrelated base-branch changes whenever main
+          # moves forward while the PR is open, causing false positives. Pin to
+          # the PR head sha so the diff only reflects this PR's own changes.
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Check for existing changeset
+        id: existing
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -eo pipefail
+          FILENAME=".changeset/renovate-${PR_NUMBER}.md"
+          if [ -f "$FILENAME" ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "Changeset $FILENAME already exists; skipping"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Detect runtime dependency changes
+        if: steps.existing.outputs.found == 'false'
+        id: runtime
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -eo pipefail
+          git fetch --no-tags --quiet origin "$BASE_REF"
+          BASE_SHA=$(git merge-base "origin/${BASE_REF}" HEAD)
+
+          # Only the dependency ranges we publish are visible to consumers.
+          # devDependencies, packageManager, aqua and GitHub Actions bumps are
+          # invisible to them and don't need a changeset.
+          FILTER='{dependencies, peerDependencies, optionalDependencies}'
+          git show "${BASE_SHA}:package.json" | jq -S "$FILTER" > /tmp/base-runtime-deps.json
+          jq -S "$FILTER" package.json > /tmp/head-runtime-deps.json
+
+          if diff -u /tmp/base-runtime-deps.json /tmp/head-runtime-deps.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No runtime dependency changes; no changeset needed."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build changeset content
+        if: steps.existing.outputs.found == 'false' && steps.runtime.outputs.changed == 'true'
+        id: content
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -eo pipefail
+          PKG_NAME=$(jq -r .name package.json)
+          # Random delimiter: PR_TITLE flows into this heredoc and is
+          # renovate-generated from a dependency/package name, so a fixed
+          # delimiter string could in principle be smuggled in to terminate
+          # the heredoc early and inject extra $GITHUB_OUTPUT lines.
+          DELIM="ghadelim_${RANDOM}${RANDOM}${RANDOM}"
+          {
+            echo "content<<$DELIM"
+            echo "---"
+            printf '"%s": patch\n' "$PKG_NAME"
+            echo "---"
+            echo ""
+            printf '%s\n' "$PR_TITLE"
+            echo "$DELIM"
+          } >> "$GITHUB_OUTPUT"
+
+  commit:
+    name: Commit changeset
+    needs: detect
+    if: needs.detect.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout only; commit-action pushes via its own app credentials
+
+    steps:
+      # This checkout only gives commit-action a git working tree to add the
+      # new changeset file to and push from. Nothing in this job executes any
+      # code from that tree — the diffing/detection that runs code from the
+      # (renovate-controlled but still PR-supplied) checkout happens entirely
+      # in the `detect` job above, which has no secrets. Keeping that split
+      # means PR-supplied content is never on disk in a job that can see
+      # APP_ID/APP_PRIVATE_KEY while anything actually executes.
+      - name: Checkout PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Write changeset file
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          CONTENT: ${{ needs.detect.outputs.content }}
+        run: |
+          set -eo pipefail
+          printf '%s\n' "$CONTENT" > ".changeset/renovate-${PR_NUMBER}.md"
+
+      - name: Commit changeset
+        uses: suzuki-shunsuke/commit-action@06e3b49d4706498d325d29bd85adc82ecf2f5d8f # v1.0.0
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          commit_message: "chore: add changeset for renovate"
+          files: |
+            .changeset/renovate-${{ github.event.pull_request.number }}.md
+          fail_on_self_push: false
