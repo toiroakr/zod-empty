@@ -34,19 +34,19 @@
   },
   "homepage": "https://github.com/toiroakr/zod-empty#readme",
   "dependencies": {
-    "just-clone": "6.2.0"
+    "just-clone": "^6.2.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.31.1",
     "@vitest/coverage-v8": "^2.1.8",
-    "@vitest/ui": "2.1.8",
+    "@vitest/ui": "^2.1.8",
     "lefthook": "^1.10.1",
     "pkg-pr-new": "^0.0.41",
     "tsdown": "^0.21.7",
-    "typescript": "6.0.2",
-    "vitest": "2.1.8",
-    "vitest-github-actions-reporter": "0.11.1",
+    "typescript": "^6.0.2",
+    "vitest": "^2.1.8",
+    "vitest-github-actions-reporter": "^0.11.1",
     "zod": "^4.0.5"
   },
   "peerDependencies": {
