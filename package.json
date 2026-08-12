@@ -1,6 +1,6 @@
 {
   "name": "zod-empty",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "generate minimum data from zod schema.",
   "packageManager": "pnpm@11.18.0",
   "types": "./dist/index.d.mts",
