@@ -1,5 +1,11 @@
 # zod-empty
 
+## 2.2.1
+
+### Patch Changes
+
+- d11e2f1: Verify peerDependencies lower bounds against real installs in CI and normalize the `typescript` range to `>=5.0.0` (was the equivalent but unconventional `>=5.x`). The `zod` floor (`4.x`, i.e. `>=4.0.0`) was verified accurate as-is.
+
 ## 2.2.0
 
 ### Minor Changes
