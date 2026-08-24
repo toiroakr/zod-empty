@@ -20,25 +20,25 @@ jobs:
     steps:
       - name: Generate GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
           standalone: true
           run_install: false
 
       # Deliberately no registry-url: it makes setup-node write an .npmrc with an
       # empty _authToken, which breaks npm OIDC trusted publishing. See c96a381.
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
 
@@ -52,14 +52,13 @@ jobs:
         run: pnpm test
 
       - name: Create Release PR or Publish
-        uses: changesets/action@v1
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
-          version: pnpm changeset version
-          publish: pnpm changeset publish
-          title: "chore: release"
-          commit: "chore: release"
-          commitMode: "github-api"
-          createGithubReleases: true
+          version-script: pnpm changeset version
+          publish-script: pnpm changeset publish
+          pr-title: "chore: release"
+          commit-message: "chore: release"
+          create-github-releases: true
+          github-token: ${{ steps.app-token.outputs.token }}
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: "true"
