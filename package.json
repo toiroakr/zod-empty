@@ -2,7 +2,7 @@
   "name": "zod-empty",
   "version": "2.2.1",
   "description": "generate minimum data from zod schema.",
-  "packageManager": "pnpm@11.18.0",
+  "packageManager": "pnpm@11.28.5",
   "types": "./dist/index.d.mts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
