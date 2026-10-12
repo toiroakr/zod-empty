@@ -18,8 +18,8 @@
     "zod-empty": "file:../.."
   },
   "devDependencies": {
-    "@types/react": "18.0.15",
-    "@types/react-dom": "18.0.6",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
     "@vitejs/plugin-react": "^2.0.0",
     "typescript": "5.9.3",
     "vite": "^3.0.4"
