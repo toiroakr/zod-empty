@@ -45,9 +45,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
     case "object": {
       const outputObject: Record<string, unknown> = {};
       const shape = typeof def.shape === "function" ? def.shape() : def.shape;
-      for (const [key, value] of Object.entries(
-        shape as Record<string, z.ZodType>,
-      )) {
+      for (const [key, value] of Object.entries(shape as Record<string, z.ZodType>)) {
         if (value) outputObject[key] = init(value as z.ZodType);
       }
       return outputObject as z.output<T>;
@@ -105,9 +103,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
     case "array":
       return [] as z.output<T>;
     case "tuple":
-      return (def.items || []).map((item: z.ZodType) =>
-        init(item),
-      ) as z.output<T>;
+      return (def.items || []).map((item: z.ZodType) => init(item)) as z.output<T>;
     case "set":
       return new Set() as z.output<T>;
     case "map":
@@ -121,9 +117,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
           // This is a native enum - return the first numeric value
           return values.filter(
             (value) =>
-              typeof (entries as Record<string, unknown>)[
-                value as string | number
-              ] !== "number",
+              typeof (entries as Record<string, unknown>)[value as string | number] !== "number",
           )[0] as z.output<T>;
         }
         // This is a regular enum - return the first value
@@ -137,13 +131,10 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
     case "intersection": {
       const left = def.left ? init(def.left) : {};
       const right = def.right ? init(def.right) : {};
-      return Object.assign(
-        left as Record<string, unknown>,
-        right,
-      ) as z.output<T>;
+      return Object.assign(left as Record<string, unknown>, right) as z.output<T>;
     }
     case "function":
-      return ((..._: unknown[]) => {
+      return (() => {
         const returnType = def.returns || def.output;
         return returnType ? init(returnType) : undefined;
       }) as z.output<T>;
@@ -164,16 +155,13 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
     case "default": {
       const defaultInnerType = def.innerType || def.base;
       const innerDef =
-        defaultInnerType?._def ||
-        (defaultInnerType as z.ZodType & { def?: ZodDefWithShape })?.def;
+        defaultInnerType?._def || (defaultInnerType as z.ZodType & { def?: ZodDefWithShape })?.def;
       const isFunction =
         (innerDef as ZodDefWithShape)?.typeName === "ZodFunction" ||
         (innerDef as ZodDefWithShape)?.type === "function";
       // In v4, defaultValue is a getter property, not a function
       const defaultValue =
-        typeof def.defaultValue === "function"
-          ? def.defaultValue()
-          : def.defaultValue;
+        typeof def.defaultValue === "function" ? def.defaultValue() : def.defaultValue;
       return (isFunction ? defaultValue : clone(defaultValue)) as z.output<T>;
     }
     case "nan":
@@ -197,11 +185,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
         const innerDefForNullable =
           innerTypeForNullable._def ||
           (innerTypeForNullable as z.ZodType & { def?: ZodDefWithShape }).def;
-        if (
-          innerDefForNullable &&
-          "coerce" in innerDefForNullable &&
-          innerDefForNullable.coerce
-        ) {
+        if (innerDefForNullable && "coerce" in innerDefForNullable && innerDefForNullable.coerce) {
           return init(innerTypeForNullable) as z.output<T>;
         }
       }
@@ -235,9 +219,7 @@ export function init<T extends z.ZodType>(schema: T): z.output<T> {
       // For branded types, get the value from the underlying type
       const brandedType = def.type || def.base;
       return (
-        brandedType && typeof brandedType !== "string"
-          ? init(brandedType)
-          : undefined
+        brandedType && typeof brandedType !== "string" ? init(brandedType) : undefined
       ) as z.output<T>;
     }
     case "catch":
@@ -289,9 +271,7 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
     case "object": {
       const outputObject: Record<string, unknown> = {};
       const shape = typeof def.shape === "function" ? def.shape() : def.shape;
-      for (const [key, value] of Object.entries(
-        shape as Record<string, z.ZodType>,
-      )) {
+      for (const [key, value] of Object.entries(shape as Record<string, z.ZodType>)) {
         if (value) outputObject[key] = empty(value as z.ZodType);
       }
       return outputObject as z.input<T>;
@@ -301,9 +281,7 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
     case "array":
       return [] as z.input<T>;
     case "tuple":
-      return (def.items || []).map((item: z.ZodType) =>
-        empty(item),
-      ) as z.input<T>;
+      return (def.items || []).map((item: z.ZodType) => empty(item)) as z.input<T>;
     case "set":
       return new Set() as z.input<T>;
     case "map":
@@ -315,10 +293,7 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
     case "intersection": {
       const left = def.left ? empty(def.left) : {};
       const right = def.right ? empty(def.right) : {};
-      return Object.assign(
-        left as Record<string, unknown>,
-        right,
-      ) as z.input<T>;
+      return Object.assign(left as Record<string, unknown>, right) as z.input<T>;
     }
     case "lazy": {
       const lazyType = def.getter ? def.getter() : def.innerType || def.base;
@@ -344,16 +319,13 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
     case "default": {
       const defaultInnerType = def.innerType || def.base;
       const innerDef =
-        defaultInnerType?._def ||
-        (defaultInnerType as z.ZodType & { def?: ZodDefWithShape })?.def;
+        defaultInnerType?._def || (defaultInnerType as z.ZodType & { def?: ZodDefWithShape })?.def;
       const isFunction =
         (innerDef as ZodDefWithShape)?.typeName === "ZodFunction" ||
         (innerDef as ZodDefWithShape)?.type === "function";
       // In v4, defaultValue is a getter property, not a function
       const defaultValue =
-        typeof def.defaultValue === "function"
-          ? def.defaultValue()
-          : def.defaultValue;
+        typeof def.defaultValue === "function" ? def.defaultValue() : def.defaultValue;
       return (isFunction ? defaultValue : clone(defaultValue)) as z.input<T>;
     }
     case "symbol":
@@ -365,9 +337,7 @@ export function empty<T extends z.ZodType>(schema: T): z.input<T> {
     case "branded": {
       const brandedInner = def.type || def.base;
       return (
-        brandedInner && typeof brandedInner !== "string"
-          ? empty(brandedInner)
-          : null
+        brandedInner && typeof brandedInner !== "string" ? empty(brandedInner) : null
       ) as z.input<T>;
     }
     case "catch": {

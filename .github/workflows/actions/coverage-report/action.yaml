@@ -10,7 +10,7 @@ runs:
     - run: pnpm run coverage | grep "|" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | grep "|" > /tmp/coverage.log
       shell: bash
     - id: coverage-log
-      uses: juliangruber/read-file-action@v1
+      uses: juliangruber/read-file-action@271ff311a4947af354c6abcd696a306553b9ec18 # v1
       with:
         path: /tmp/coverage.log
     - uses: marocchino/sticky-pull-request-comment@v2
