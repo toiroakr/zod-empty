@@ -14,6 +14,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     strategy:
       matrix:
@@ -21,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -28,17 +31,20 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm build:sample
       - run: pnpm test
       - uses: ./.github/workflows/actions/coverage-report
         with:
           token: ${{secrets.GITHUB_TOKEN}}
-        if: startsWith(${{ matrix.node-version }}, '16.')
+        if: ${{ startsWith(matrix.node-version, '16.') }}
         # FIXME: This is a workaround for comment on PRs from forks
         continue-on-error: true
 
   peer-floor:
     name: peer-floor (${{ matrix.name }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     # Verifies the peerDependencies lower bounds declared in package.json
     # (zod, typescript) actually install and pass build+test, since Renovate
@@ -57,6 +63,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -66,7 +74,7 @@ jobs:
       - name: Install peerDependencies floor versions
         run: |
           set -eo pipefail
-          if [ -n "${{ matrix.zod }}" ]; then pnpm add -D zod@${{ matrix.zod }}; fi
-          if [ -n "${{ matrix.typescript }}" ]; then pnpm add -D typescript@${{ matrix.typescript }}; fi
+          if [ -n "${{ matrix.zod }}" ]; then pnpm add -Dw zod@${{ matrix.zod }}; fi
+          if [ -n "${{ matrix.typescript }}" ]; then pnpm add -Dw typescript@${{ matrix.typescript }}; fi
       - run: pnpm build
       - run: pnpm test -- --run

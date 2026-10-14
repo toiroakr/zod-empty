@@ -24,6 +24,7 @@ npm install zod-empty
 Use with react-hook-form like this: (ref. [react-hook-form](https://github.com/react-hook-form/resolvers#zod))
 
 // Please check default value for schema [here](./src/index.spec.ts).
+
 ```typescript jsx
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,3 +62,19 @@ const App = () => {
   );
 };
 ```
+
+## Development
+
+Use Node.js 22.13 or newer and the pnpm version pinned in `package.json`.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm build
+pnpm build:sample
+pnpm check
+pnpm test
+```
+
+`pnpm check` checks formatting with [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) and linting with [oxlint](https://oxc.rs/docs/guide/usage/linter.html).
+Use `pnpm format` to format files and `pnpm lint:fix` to apply safe lint fixes.
+The React Hook Form sample is included in the pnpm workspace and uses the local library build.

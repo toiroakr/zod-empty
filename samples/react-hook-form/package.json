@@ -1,31 +1,29 @@
 {
   "name": "@zod-empty/react-hook-form",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "preinstall": "npm i --prefix ../../ & npm run build --prefix ../../",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@hookform/resolvers": "3.10.0",
+    "@hookform/resolvers": "5.9.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "7.89.0",
-    "zod": "3.25.76",
-    "zod-empty": "file:../.."
+    "zod": "4.4.3",
+    "zod-empty": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
-    "@vitejs/plugin-react": "^2.0.0",
+    "@vitejs/plugin-react": "6.1.2",
     "typescript": "5.9.3",
-    "vite": "^3.0.4"
+    "vite": "8.3.3"
   },
-  "volta": {
-    "node": "16.20.2",
-    "npm": "8.19.4"
+  "engines": {
+    "node": ">=22.13"
   }
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
+
 import { empty, init } from ".";
 
 describe("make empty", () => {
@@ -412,11 +413,7 @@ describe("make empty", () => {
 
     // Test template literal
     it("template literal", () => {
-      const templateSchema = z.templateLiteral([
-        "hello-",
-        z.string(),
-        "-world",
-      ]);
+      const templateSchema = z.templateLiteral(["hello-", z.string(), "-world"]);
       expect(init(templateSchema)).toBe("hello--world");
       expect(empty(templateSchema)).toBeNull();
     });
