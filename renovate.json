@@ -9,7 +9,6 @@
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
-      "automerge": true,
       "rangeStrategy": "pin"
     },
     {
@@ -31,6 +30,11 @@
     {
       "groupName": "typescript",
       "matchPackageNames": ["typescript", "@types/*"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     }
-  ]
+  ],
+  "platformAutomerge": false
 }

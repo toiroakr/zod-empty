@@ -78,3 +78,15 @@ pnpm test
 `pnpm check` checks formatting with [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) and linting with [oxlint](https://oxc.rs/docs/guide/usage/linter.html).
 Use `pnpm format` to format files and `pnpm lint:fix` to apply safe lint fixes.
 The React Hook Form sample is included in the pnpm workspace and uses the local library build.
+
+### Dependency updates
+
+Dependency updates use a seven-day release-age policy in both Renovate and pnpm.
+pnpm also checks transitive packages during installation.
+Minor and patch updates can merge automatically after CI succeeds; major updates
+and peer dependency changes require manual merging. Renovate performs the merge
+itself instead of delegating it to GitHub auto-merge.
+
+The `main` branch requires the `check`, `build`, `test (22.13.0)`, `test (24.x)`,
+and all three `peer-floor` checks from GitHub Actions before merging. Keep these
+required check names in sync when changing the CI matrix.
