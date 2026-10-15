@@ -4,6 +4,9 @@
   "labels": ["dependencies"],
   "gitIgnoredAuthors": ["271965483+toiroakr-release-bot[bot]@users.noreply.github.com"],
   "minimumReleaseAge": "7 days",
+  "prCreation": "not-pending",
+  "internalChecksFilter": "strict",
+  "internalChecksAsSuccess": true,
   "prConcurrentLimit": 5,
   "rangeStrategy": "auto",
   "packageRules": [
