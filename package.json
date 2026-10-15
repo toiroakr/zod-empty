@@ -69,8 +69,8 @@
     "lefthook": "2.2.1",
     "oxfmt": "0.72.0",
     "oxlint": "1.87.0",
-    "pkg-pr-new": "0.0.90",
-    "tsdown": "0.23.1",
+    "pkg-pr-new": "0.0.91",
+    "tsdown": "0.21.10",
     "typescript": "6.0.3",
     "vitest": "2.1.9",
     "vitest-github-actions-reporter": "0.11.1",
@@ -83,5 +83,5 @@
   "engines": {
     "node": ">=22.13"
   },
-  "packageManager": "pnpm@11.28.5"
+  "packageManager": "pnpm@12.11.2"
 }

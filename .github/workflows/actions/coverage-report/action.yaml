@@ -13,7 +13,7 @@ runs:
       uses: juliangruber/read-file-action@271ff311a4947af354c6abcd696a306553b9ec18 # v1
       with:
         path: /tmp/coverage.log
-    - uses: marocchino/sticky-pull-request-comment@v2
+    - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
       with:
         GITHUB_TOKEN: ${{ inputs.token }}
         header: coverage-summary
