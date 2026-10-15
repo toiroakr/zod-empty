@@ -65,7 +65,9 @@ const App = () => {
 
 ## Development
 
-Use Node.js 22.13 or newer and the pnpm version pinned in `package.json`.
+Use Node.js 22.18 or newer (Node.js 24.11 or newer on the 24.x line) for development
+and the pnpm version pinned in `package.json`. The published library continues to
+support Node.js 22.13 or newer.
 
 ```sh
 pnpm install --frozen-lockfile
