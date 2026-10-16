@@ -37,6 +37,12 @@
     {
       "matchUpdateTypes": ["major"],
       "automerge": false
+    },
+    {
+      "description": "Keep npm updates behind the same seven-day cooldown as pnpm.",
+      "matchDatasources": ["npm"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "minimumReleaseAge": "7 days"
     }
   ],
   "platformAutomerge": false
