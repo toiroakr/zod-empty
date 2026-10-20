@@ -57,5 +57,8 @@
       "groupName": "react types"
     }
   ],
-  "platformAutomerge": false
+  "platformAutomerge": false,
+  "vulnerabilityAlerts": {
+    "minimumGroupSize": 1
+  }
 }
