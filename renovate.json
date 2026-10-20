@@ -24,7 +24,8 @@
     },
     {
       "groupName": "testing",
-      "matchPackageNames": ["vitest", "@vitest/*"]
+      "matchPackageNames": ["vitest", "@vitest/*"],
+      "minimumGroupSize": 3
     },
     {
       "groupName": "linting and formatting",
@@ -43,6 +44,17 @@
       "matchDatasources": ["npm"],
       "matchUpdateTypes": ["major", "minor", "patch"],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["react", "react-dom"],
+      "groupName": "react runtime",
+      "minimumGroupSize": 2
+    },
+    {
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["@types/react", "@types/react-dom"],
+      "groupName": "react types"
     }
   ],
   "platformAutomerge": false
