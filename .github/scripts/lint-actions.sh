@@ -48,8 +48,9 @@ while IFS= read -r -d '' file; do
     fi
   fi
   if [[ -z "$reason" ]]; then
+    # Clean responses omit parse_error; requiring it rejects valid results.
     if jq -e '.result.parse_error != null' <<< "$response" > /dev/null 2>&1; then
-      reason=$(jq -r '.result.parse_error | tostring' <<< "$response")
+      reason="karinto parse error: $(jq -r '.result.parse_error | tostring' <<< "$response")"
       rule='parse-error'
     elif ! jq -e '.ok == true and (.result | type == "object") and (.result.diagnostics | type == "array") and all(.result.diagnostics[]; (.rule | type == "string") and (.message | type == "string") and (.severity == "error" or .severity == "warning" or .severity == "info"))' <<< "$response" > /dev/null 2>&1; then
       reason='karinto returned an invalid response'
