@@ -1,6 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices", ":automergeMinor", ":dependencyDashboard"],
+  "extends": [
+    "github>toiroakr/karinto:pin#v0.12.0",
+    "config:best-practices",
+    ":automergeMinor",
+    ":dependencyDashboard"
+  ],
   "labels": ["dependencies"],
   "gitIgnoredAuthors": ["271965483+toiroakr-release-bot[bot]@users.noreply.github.com"],
   "minimumReleaseAge": "7 days",
