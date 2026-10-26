@@ -47,7 +47,7 @@ for response in \
     exit 1
   fi
 done
-export CURL_STATUS=7
+export CURL_RESPONSE='{"ok":true,"result":{"diagnostics":[]}}' CURL_STATUS=7
 if bash "$script" > "$repo/output" 2>&1; then
   printf 'Unexpected lint success after request failure\n' >&2
   exit 1
