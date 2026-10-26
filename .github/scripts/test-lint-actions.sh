@@ -36,6 +36,9 @@ for response in \
   '{"ok":true,"result":{"diagnostics":[],"parse_error":"invalid"}}' \
   '{"ok":false}' \
   '{"ok":true,"result":{}}' \
+  '{"ok":true,"result":{"diagnostics":[null]}}' \
+  '{"ok":true,"result":{"diagnostics":[{"message":"failed"}]}}' \
+  '{"ok":true,"result":{"diagnostics":[{"severity":"unknown","rule":"unknown","message":"unknown"}]}}' \
   'invalid json'; do
   export CURL_RESPONSE="$response"
   if bash "$script" > "$repo/output" 2>&1; then
@@ -49,3 +52,24 @@ if bash "$script" > "$repo/output" 2>&1; then
   exit 1
 fi
 printf 'PASS: diagnostics, parse errors, invalid responses, and request failures\n'
+
+export CURL_STATUS=0 CURL_RESPONSE='{"ok":true,"result":{"diagnostics":[]}}'
+rm -- .github/workflows/action.yml
+printf 'runner-local value\n' > "$repo/local-value"
+ln -s "$repo/local-value" .github/workflows/action.yml
+if bash "$script" > "$repo/output" 2>&1; then
+  printf 'Unexpected lint success for a symlink\n' >&2
+  exit 1
+fi
+rm -- .github/workflows/action.yml
+printf 'name: example\n' > .github/workflows/action.yml
+cat > "$repo/bin/git" <<'GIT'
+#!/usr/bin/env bash
+exit 17
+GIT
+chmod +x "$repo/bin/git"
+if bash "$script" > "$repo/output" 2>&1; then
+  printf 'Unexpected lint success after file discovery failure\n' >&2
+  exit 1
+fi
+printf 'PASS: symlinks and failed file discovery are rejected\n'
