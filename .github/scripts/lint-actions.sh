@@ -4,11 +4,13 @@ set -euo pipefail
 results='[]'
 status=0
 while IFS= read -r -d '' file; do
-  case "$file" in
-    */action.yml|*/action.yaml|action.yml|action.yaml) kind=action ;;
-    .github/workflows/*.yml|.github/workflows/*.yaml) kind=workflow ;;
-    *) continue ;;
-  esac
+  if [[ "${file%/*}" == .github/workflows ]]; then
+    kind=workflow
+  elif [[ "${file##*/}" == action.yml || "${file##*/}" == action.yaml ]]; then
+    kind=action
+  else
+    continue
+  fi
   echo "::group::karinto: $file"
   if [[ -n "${KARINTO_CLI:-}" ]]; then
     if response=$(node --input-type=commonjs -e 'globalThis.require = require; import(process.argv[1])' \
