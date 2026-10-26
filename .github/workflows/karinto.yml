@@ -1,0 +1,38 @@
+name: GitHub Actions Lint (karinto)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/**"
+      - "**/action.yml"
+      - "**/action.yaml"
+      - "action.yml"
+      - "action.yaml"
+  pull_request:
+    paths:
+      - ".github/**"
+      - "**/action.yml"
+      - "**/action.yaml"
+      - "action.yml"
+      - "action.yaml"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  karinto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Lint workflows and actions
+        run: bash .github/scripts/lint-actions.sh
