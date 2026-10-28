@@ -40,7 +40,7 @@ jobs:
       # empty _authToken, which breaks npm OIDC trusted publishing. See c96a381.
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
