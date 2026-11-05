@@ -50,7 +50,7 @@ jobs:
           assert.deepEqual(initCjs(schema), { name: "" });
           JS
       - run: pnpm test
-      - uses: ./.github/workflows/actions/coverage-report
+      - uses: $/.github/workflows/actions/coverage-report
         with:
           token: ${{secrets.GITHUB_TOKEN}}
         if: ${{ startsWith(matrix.node-version, '16.') }}
