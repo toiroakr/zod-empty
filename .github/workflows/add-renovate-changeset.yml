@@ -55,11 +55,29 @@ jobs:
             echo "found=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+
+      - name: Detect resolved runtime dependency changes
+        if: steps.existing.outputs.found == 'false'
+        id: lockfile
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -eo pipefail
+          git fetch --no-tags --quiet origin "$BASE_REF"
+          BASE_SHA=$(git merge-base "origin/${BASE_REF}" HEAD)
+          git show "$BASE_SHA:pnpm-lock.yaml" > /tmp/renovate-base-lock.yaml
+          node .github/scripts/lockfile-runtime-diff.mjs --before /tmp/renovate-base-lock.yaml
+
       - name: Detect runtime dependency changes
         if: steps.existing.outputs.found == 'false'
         id: runtime
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+          LOCK_RUNTIME_CHANGED: ${{ steps.lockfile.outputs.has-runtime-changes }}
         run: |
           set -eo pipefail
           git fetch --no-tags --quiet origin "$BASE_REF"
@@ -72,7 +90,7 @@ jobs:
           git show "${BASE_SHA}:package.json" | jq -S "$FILTER" > /tmp/base-runtime-deps.json
           jq -S "$FILTER" package.json > /tmp/head-runtime-deps.json
 
-          if diff -u /tmp/base-runtime-deps.json /tmp/head-runtime-deps.json; then
+          if diff -u /tmp/base-runtime-deps.json /tmp/head-runtime-deps.json && [ "$LOCK_RUNTIME_CHANGED" != "true" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No runtime dependency changes; no changeset needed."
           else

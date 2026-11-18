@@ -4,8 +4,9 @@
 version: 'v0.0.3'
 workflows:
     '.github/workflows/add-renovate-changeset.yml':
-        - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'suzuki-shunsuke/commit-action@5eaa5ecce3ffe93d09a85b946dc5136e3713b1b7'
+        - 'actions/checkout@v7.0.1'
+        - 'actions/setup-node@v7.1.0'
+        - 'suzuki-shunsuke/commit-action@v1.1.0'
     '.github/workflows/check.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1'
@@ -36,12 +37,22 @@ dependencies:
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
+    'actions/checkout@v7.0.1':
+        ref: 'v7.0.1'
+        commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
+        owner_id: 44036562
+        repo_id: 197814629
     'actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510':
         ref: 'v3.3.0'
         commit: 'sha1-64ab729a6294000f5aa4a4bc0b73d1f32bc45510'
         owner_id: 44036562
         repo_id: 642580244
     'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1':
+        ref: 'v7.1.0'
+        commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'
+        owner_id: 44036562
+        repo_id: 189476904
+    'actions/setup-node@v7.1.0':
         ref: 'v7.1.0'
         commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'
         owner_id: 44036562
@@ -66,7 +77,7 @@ dependencies:
         commit: 'sha1-73e46992e05b19abd31f2f3c20e0e7370d762115'
         owner_id: 21320719
         repo_id: 262289747
-    'suzuki-shunsuke/commit-action@5eaa5ecce3ffe93d09a85b946dc5136e3713b1b7':
+    'suzuki-shunsuke/commit-action@v1.1.0':
         ref: 'v1.1.0'
         commit: 'sha1-5eaa5ecce3ffe93d09a85b946dc5136e3713b1b7'
         owner_id: 13323303
