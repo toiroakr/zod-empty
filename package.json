@@ -50,7 +50,7 @@
     "release": "pnpm build && changeset publish",
     "check": "pnpm format:check && pnpm lint",
     "check:force": "pnpm format && pnpm lint:fix",
-    "test": "vitest run",
+    "test": "node --test .github/scripts/test-lockfile-runtime-diff.mjs && vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "format": "oxfmt --write .",
