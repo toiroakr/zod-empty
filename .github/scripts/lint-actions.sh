@@ -42,7 +42,7 @@ while IFS= read -r -d '' file; do
     if ! response=$(curl --silent --show-error --fail-with-body --max-time 60 --retry 2 \
       --data-urlencode "content@$file" --data-urlencode "path=$file" \
       --data-urlencode "type=$kind" --data 'persona=regular&no_capture=1' \
-      https://karinto-v0-12-0.toiroakr.workers.dev); then
+      https://karinto-v0-12-1.toiroakr.workers.dev); then
       reason='karinto request failed'
       rule='request-failed'
     fi
