@@ -172,8 +172,9 @@ function parseImporters(text, normalize = false) {
           ...project.devDependencies,
           ...project.dependencies,
         };
+        const dependencies = { ...project.dependencies, ...project.optionalDependencies };
         const resolvedDependencies = normalizeDependencies(
-          project.dependencies ?? {},
+          dependencies,
           lockfile.settings?.catalogs,
           true,
           lockfile.packages,
@@ -183,10 +184,9 @@ function parseImporters(text, normalize = false) {
           path,
           normalize
             ? resolvedDependencies
-            : Object.keys(project.dependencies ?? {}).length
-              ? JSON.stringify(
-                  { dependencies: project.dependencies, resolvedDependencies },
-                  (_key, value) => (value === "catalog:default" ? "catalog:" : value),
+            : Object.keys(dependencies).length
+              ? JSON.stringify({ dependencies, resolvedDependencies }, (_key, value) =>
+                  value === "catalog:default" ? "catalog:" : value,
                 )
               : undefined,
         ];
@@ -204,7 +204,7 @@ function parseImporters(text, normalize = false) {
   let sectionLines = [];
 
   const flush = () => {
-    if (currentImporter && currentSection === "dependencies") {
+    if (currentImporter && sectionLines.length) {
       importers[currentImporter] = normalize
         ? normalizeYamlDependencies(sectionLines, catalogs)
         : sectionLines.length
@@ -233,11 +233,12 @@ function parseImporters(text, normalize = false) {
       continue;
     }
     if (indent === 4) {
-      flush();
       currentSection = line.trim().replace(/:$/, "");
       continue;
     }
-    if (currentSection === "dependencies") sectionLines.push(line);
+    if (currentSection === "dependencies" || currentSection === "optionalDependencies") {
+      sectionLines.push(line);
+    }
   }
   flush();
 

@@ -491,3 +491,74 @@ test("honors explicit peer bindings on v13 references", () => {
     assert.match(runDiff(before, JSON.stringify(after)), /No runtime dependency changes/);
   }
 });
+
+test("detects lockfile-only optional runtime dependency updates", () => {
+  const before = v13({ example: { specifier: "^1.0.0", version: "1.2.0" } }).replace(
+    '"dependencies":',
+    '"optionalDependencies":',
+  );
+  assert.match(
+    runDiff(before, before.replace('"1.2.0"', '"1.3.0"')),
+    /Runtime dependency changes detected in: example/,
+  );
+});
+
+test("preserves and updates optional dependencies across v9 and v13 lockfiles", () => {
+  const before = `lockfileVersion: '9.0'
+importers:
+  lib:
+    dependencies:
+      required:
+        specifier: ^1.0.0
+        version: 1.2.0
+    optionalDependencies:
+      optional:
+        specifier: ^1.0.0
+        version: 1.2.0
+    devDependencies:
+      tool:
+        specifier: ^1.0.0
+        version: 1.2.0
+`;
+  const after = v13({ required: { specifier: "^1.0.0", version: "1.2.0" } }).replace(
+    '"devDependencies":',
+    '"optionalDependencies": { "optional": { "specifier": "^1.0.0", "version": "1.2.0" } }, "devDependencies":',
+  );
+  assert.match(runDiff(before, after), /No runtime dependency changes/);
+  assert.match(runDiff(after, before), /No runtime dependency changes/);
+  assert.match(
+    runDiff(
+      before,
+      before.replace(
+        "optional:\n        specifier: ^1.0.0\n        version: 1.2.0",
+        "optional:\n        specifier: ^1.0.0\n        version: 1.3.0",
+      ),
+    ),
+    /Runtime dependency changes detected in: example/,
+  );
+  assert.match(
+    runDiff(
+      before,
+      before.replace(
+        "required:\n        specifier: ^1.0.0\n        version: 1.2.0",
+        "required:\n        specifier: ^1.0.0\n        version: 1.3.0",
+      ),
+    ),
+    /Runtime dependency changes detected in: example/,
+  );
+  assert.match(
+    runDiff(
+      before,
+      before.replace(
+        "tool:\n        specifier: ^1.0.0\n        version: 1.2.0",
+        "tool:\n        specifier: ^1.0.0\n        version: 1.3.0",
+      ),
+    ),
+    /No runtime dependency changes/,
+  );
+  const changed = after.replace(
+    '"optional": { "specifier": "^1.0.0", "version": "1.2.0"',
+    '"optional": { "specifier": "^1.0.0", "version": "1.3.0"',
+  );
+  assert.match(runDiff(before, changed), /Runtime dependency changes detected in: example/);
+});
