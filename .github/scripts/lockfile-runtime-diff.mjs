@@ -64,7 +64,9 @@ function normalizeDependencies(
     const explicitPeers = typeof dependency === "string" ? {} : (dependency.with ?? {});
     const inferredPeerDependencies =
       typeof dependency !== "string" && dependency.with && !Object.keys(explicitPeers).length
-        ? {}
+        ? Object.fromEntries(
+            Object.entries(entry?.peerDependencies ?? {}).filter(([, peer]) => peer?.version),
+          )
         : entry?.peerDependencies;
     const peers = [
       ...Array.from((resolved ?? "").matchAll(/\(([^()]+)/g), (match) => match[1]),

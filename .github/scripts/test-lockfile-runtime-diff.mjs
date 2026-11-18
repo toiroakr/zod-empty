@@ -647,8 +647,7 @@ test("keeps explicitly unbound optional peers independent of development provide
       },
       packages: {
         "example@1.0.0": {
-          peerDependencies: { react: "^18.2.0" },
-          peerDependenciesMeta: { react: { optional: true } },
+          peerDependencies: { react: { specifier: "^18.2.0", optional: true } },
           snapshots: [{}, { peerDependencies: { react: "18.2.0" } }],
         },
       },
@@ -656,6 +655,29 @@ test("keeps explicitly unbound optional peers independent of development provide
   assert.match(runDiff(lock("18.2.0"), lock("18.3.1")), /No runtime dependency changes/);
   assert.match(
     runDiff(lock("18.2.0"), lock("18.2.0", { react: "18.2.0" })),
+    /Runtime dependency changes detected in: published-fixture/,
+  );
+});
+
+test("detects shared bound peer updates beside explicitly unbound optional peers", () => {
+  const lock = (version) =>
+    JSON.stringify({
+      lockfileVersion: "13.0",
+      projects: {
+        lib: { dependencies: { example: { specifier: "1.0.0", with: {} } } },
+      },
+      packages: {
+        "example@1.0.0": {
+          peerDependencies: {
+            required: { specifier: "^1.0.0", version },
+            optional: { specifier: "^1.0.0", optional: true },
+          },
+          snapshots: [{}, { peerDependencies: { optional: "1.0.0" } }],
+        },
+      },
+    });
+  assert.match(
+    runDiff(lock("1.0.0"), lock("1.0.1")),
     /Runtime dependency changes detected in: published-fixture/,
   );
 });
