@@ -26,7 +26,7 @@ function runDiff(before, after, expectedOutput) {
   const dir = mkdtempSync(join(tmpdir(), "lockfile-runtime-diff-"));
   try {
     mkdirSync(join(dir, "lib"));
-    writeFileSync(join(dir, "lib/package.json"), JSON.stringify({ name: "example" }));
+    writeFileSync(join(dir, "lib/package.json"), JSON.stringify({ name: "published-fixture" }));
     writeFileSync(join(dir, "before.yaml"), before);
     writeFileSync(join(dir, "after.yaml"), after);
     const result = spawnSync(
@@ -50,7 +50,7 @@ function runDiff(before, after, expectedOutput) {
 test("detects runtime dependency updates in v13 project documents", () => {
   assert.match(
     runDiff(v13({ example: "1.0.0" }), v13({ example: "2.0.0" })),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
   assert.match(
     runDiff(
@@ -82,7 +82,7 @@ importers:
   );
   assert.match(
     runDiff(before, v13({ example: { specifier: "^1.0.0", version: "1.3.0" } })),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -100,7 +100,7 @@ test("detects runtime updates when lockfiles have CRLF line endings", () => {
       v13({ example: "1.0.0" }).replaceAll("\n", "\r\n"),
       v13({ example: "2.0.0" }).replaceAll("\n", "\r\n"),
     ),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -126,7 +126,7 @@ importers:
     runDiff(before, after.replace('"example": "2.0.0"', '"example": "1.0.0"')),
     /No runtime dependency changes/,
   );
-  assert.match(runDiff(before, after), /Runtime dependency changes detected in: example/);
+  assert.match(runDiff(before, after), /Runtime dependency changes detected in: published-fixture/);
 });
 
 test("detects resolved catalog updates between v13 lockfiles", () => {
@@ -135,7 +135,7 @@ test("detects resolved catalog updates between v13 lockfiles", () => {
     '"settings": { "catalogs": { "default": { "example": "2.0.0" } } }, "projects": {',
   );
   const before = after.replace('"example": "2.0.0"', '"example": "1.0.0"');
-  assert.match(runDiff(before, after), /Runtime dependency changes detected in: example/);
+  assert.match(runDiff(before, after), /Runtime dependency changes detected in: published-fixture/);
 });
 
 test("detects catalog range updates when the resolved version stays unchanged", () => {
@@ -144,7 +144,7 @@ test("detects catalog range updates when the resolved version stays unchanged", 
     '"settings": { "catalogs": { "default": { "example": { "specifier": "^1.0.0", "version": "1.2.0" } } } }, "projects": {',
   );
   const after = before.replace('"specifier": "^1.0.0"', '"specifier": "^1.1.0"');
-  assert.match(runDiff(before, after), /Runtime dependency changes detected in: example/);
+  assert.match(runDiff(before, after), /Runtime dependency changes detected in: published-fixture/);
 });
 
 test("detects catalog range changes during a v9 to v13 migration", () => {
@@ -167,7 +167,10 @@ importers:
   );
   assert.match(runDiff(before, same), /No runtime dependency changes/);
   const changed = same.replace('"specifier": "^1.0.0"', '"specifier": "^1.1.0"');
-  assert.match(runDiff(before, changed), /Runtime dependency changes detected in: example/);
+  assert.match(
+    runDiff(before, changed),
+    /Runtime dependency changes detected in: published-fixture/,
+  );
 });
 
 test("detects catalog range changes between v9 lockfiles", () => {
@@ -185,7 +188,7 @@ importers:
         version: 1.2.0
 `;
   const after = before.replace("specifier: ^1.0.0", "specifier: ^1.1.0");
-  assert.match(runDiff(before, after), /Runtime dependency changes detected in: example/);
+  assert.match(runDiff(before, after), /Runtime dependency changes detected in: published-fixture/);
 });
 
 test("resolves catalogs for dependency objects without explicit versions", () => {
@@ -194,7 +197,7 @@ test("resolves catalogs for dependency objects without explicit versions", () =>
     '"settings": { "catalogs": { "default": { "example": { "specifier": "^1.0.0", "version": "1.2.0" } } } }, "projects": {',
   );
   const after = before.replace('"version": "1.2.0"', '"version": "1.3.0"');
-  assert.match(runDiff(before, after), /Runtime dependency changes detected in: example/);
+  assert.match(runDiff(before, after), /Runtime dependency changes detected in: published-fixture/);
 });
 
 test("keeps named catalog metadata after a YAML comment", () => {
@@ -220,7 +223,7 @@ importers:
     "named:\n    example:\n      specifier: ^1.0.0",
     "named:\n    example:\n      specifier: ^1.1.0",
   );
-  assert.match(runDiff(before, after), /Runtime dependency changes detected in: example/);
+  assert.match(runDiff(before, after), /Runtime dependency changes detected in: published-fixture/);
 });
 
 for (const [specifier, version] of [
@@ -303,18 +306,18 @@ test("detects resolved peer updates in v13 package entries", () => {
   delete after.projects.lib.devDependencies;
   assert.match(
     runDiff(JSON.stringify(before), JSON.stringify(after)),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
 test("detects resolved peer updates across lockfile formats", () => {
   assert.match(
     runDiff(v9Peer, v13Peer("18.3.1")),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
   assert.match(
     runDiff(v13Peer("18.3.1"), v9Peer),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -342,7 +345,7 @@ test("detects project peer changes when shared package snapshots stay unchanged"
   assert.match(runDiff(v9Peer, lock("18.2.0")), /No runtime dependency changes/);
   assert.match(
     runDiff(lock("18.2.0"), lock("18.3.1")),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -369,7 +372,7 @@ test("resolves named catalogs used by project peer providers", () => {
     });
   assert.match(
     runDiff(lock("18.2.0"), lock("18.3.1")),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -457,7 +460,7 @@ test("resolves optional project and root peer providers", () => {
     };
     assert.match(
       runDiff(lock("18.2.0"), lock("18.3.1")),
-      /Runtime dependency changes detected in: example/,
+      /Runtime dependency changes detected in: published-fixture/,
     );
   }
 });
@@ -477,7 +480,7 @@ test("resolves catalog object peer providers without redundant versions", () => 
   };
   assert.match(
     runDiff(lock("18.2.0"), lock("18.3.1")),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -502,7 +505,7 @@ test("detects lockfile-only optional runtime dependency updates", () => {
   );
   assert.match(
     runDiff(before, before.replace('"1.2.0"', '"1.3.0"')),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });
 
@@ -537,7 +540,7 @@ importers:
         "optional:\n        specifier: ^1.0.0\n        version: 1.3.0",
       ),
     ),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
   assert.match(
     runDiff(
@@ -547,7 +550,7 @@ importers:
         "required:\n        specifier: ^1.0.0\n        version: 1.3.0",
       ),
     ),
-    /Runtime dependency changes detected in: example/,
+    /Runtime dependency changes detected in: published-fixture/,
   );
   assert.match(
     runDiff(
@@ -563,7 +566,10 @@ importers:
     '"optional": { "specifier": "^1.0.0", "version": "1.2.0"',
     '"optional": { "specifier": "^1.0.0", "version": "1.3.0"',
   );
-  assert.match(runDiff(before, changed), /Runtime dependency changes detected in: example/);
+  assert.match(
+    runDiff(before, changed),
+    /Runtime dependency changes detected in: published-fixture/,
+  );
 });
 
 test("does not write test results to the parent GitHub Actions output", () => {
@@ -586,11 +592,45 @@ test("emits the GitHub Actions runtime-change outputs", () => {
   runDiff(
     v13({ example: "1.0.0" }),
     v13({ example: "2.0.0" }),
-    /^has-runtime-changes=true\nchanged-names<<([^\n]+)\nexample\n\1\n$/,
+    /^has-runtime-changes=true\nchanged-names<<([^\n]+)\npublished-fixture\n\1\n$/,
   );
   runDiff(
     v13({ example: "1.0.0" }),
     v13({ example: "1.0.0" }),
     /^has-runtime-changes=false\nchanged-names<<([^\n]+)\n\n\1\n$/,
+  );
+});
+
+test("detects compact peer provider updates without redundant versions", () => {
+  const lock = (version) => {
+    const result = JSON.parse(v13Peer("18.2.0"));
+    result.projects.lib.devDependencies.react = {
+      specifier: version,
+      with: { scheduler: "0.23.2" },
+    };
+    const entry = result.packages["react-dom@18.2.0"];
+    entry.peerDependencies = { react: "^18.2.0" };
+    entry.snapshots = [{}, {}];
+    return JSON.stringify(result);
+  };
+  assert.match(
+    runDiff(lock("18.2.0"), lock("18.3.1")),
+    /Runtime dependency changes detected in: published-fixture/,
+  );
+});
+
+test("detects runtime updates below comment-only YAML lines", () => {
+  const before = `lockfileVersion: '9.0'
+importers:
+# workspace projects
+  lib:
+    dependencies:
+      example:
+        specifier: ^1.0.0
+        version: 1.2.0
+`;
+  assert.match(
+    runDiff(before, before.replace("version: 1.2.0", "version: 1.3.0")),
+    /Runtime dependency changes detected in: published-fixture/,
   );
 });

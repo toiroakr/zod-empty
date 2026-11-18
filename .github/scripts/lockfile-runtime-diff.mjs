@@ -67,7 +67,8 @@ function normalizeDependencies(
       ...Object.entries({ ...entry?.peerDependencies, ...explicitPeers }).flatMap(
         ([peerName, peer]) => {
           const provider = providers[peerName];
-          let providerVersion = typeof provider === "string" ? provider : provider?.version;
+          let providerVersion =
+            typeof provider === "string" ? provider : (provider?.version ?? provider?.specifier);
           if (!providerVersion && provider?.specifier?.startsWith("catalog:")) {
             providerVersion = provider.specifier;
           }
@@ -219,7 +220,7 @@ function parseImporters(text, normalize = false) {
 
   for (let i = importersIdx + 1; i < lines.length; i++) {
     const line = lines[i];
-    if (line.trim() === "") continue;
+    if (line.trim() === "" || line.trimStart().startsWith("#")) continue;
     const indent = line.match(/^ */)[0].length;
     if (indent === 0) break; // back to top-level key, importers block ended
 
