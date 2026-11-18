@@ -62,9 +62,15 @@ function normalizeDependencies(
     const packageName = alias ? (separator > 0 ? alias.slice(0, separator) : alias) : name;
     const entry = packages[`${packageName}@${reference}`] ?? packages[reference];
     const explicitPeers = typeof dependency === "string" ? {} : (dependency.with ?? {});
+    const inferredPeerDependencies =
+      typeof dependency !== "string" && dependency.with && !Object.keys(explicitPeers).length
+        ? Object.fromEntries(
+            Object.entries(entry?.peerDependencies ?? {}).filter(([, peer]) => peer?.version),
+          )
+        : entry?.peerDependencies;
     const peers = [
       ...Array.from((resolved ?? "").matchAll(/\(([^()]+)/g), (match) => match[1]),
-      ...Object.entries({ ...entry?.peerDependencies, ...explicitPeers }).flatMap(
+      ...Object.entries({ ...inferredPeerDependencies, ...explicitPeers }).flatMap(
         ([peerName, peer]) => {
           const provider = providers[peerName];
           let providerVersion =
