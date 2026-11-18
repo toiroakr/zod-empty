@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -22,7 +22,7 @@ importers: {}
 }
 `;
 
-function runDiff(before, after) {
+function runDiff(before, after, expectedOutput) {
   const dir = mkdtempSync(join(tmpdir(), "lockfile-runtime-diff-"));
   try {
     mkdirSync(join(dir, "lib"));
@@ -35,9 +35,12 @@ function runDiff(before, after) {
       {
         cwd: dir,
         encoding: "utf8",
+        env: { ...process.env, GITHUB_OUTPUT: join(dir, "github-output") },
       },
     );
     assert.equal(result.status, 0, result.stderr);
+    if (expectedOutput)
+      assert.match(readFileSync(join(dir, "github-output"), "utf8"), expectedOutput);
     return result.stdout;
   } finally {
     rmSync(dir, { recursive: true, force: true });
@@ -561,4 +564,33 @@ importers:
     '"optional": { "specifier": "^1.0.0", "version": "1.3.0"',
   );
   assert.match(runDiff(before, changed), /Runtime dependency changes detected in: example/);
+});
+
+test("does not write test results to the parent GitHub Actions output", () => {
+  const dir = mkdtempSync(join(tmpdir(), "runtime-diff-parent-output-"));
+  const output = join(dir, "output");
+  const previous = process.env.GITHUB_OUTPUT;
+  try {
+    writeFileSync(output, "untouched\n");
+    process.env.GITHUB_OUTPUT = output;
+    runDiff(v13({ example: "1.0.0" }), v13({ example: "2.0.0" }));
+    assert.equal(readFileSync(output, "utf8"), "untouched\n");
+  } finally {
+    if (previous === undefined) delete process.env.GITHUB_OUTPUT;
+    else process.env.GITHUB_OUTPUT = previous;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("emits the GitHub Actions runtime-change outputs", () => {
+  runDiff(
+    v13({ example: "1.0.0" }),
+    v13({ example: "2.0.0" }),
+    /^has-runtime-changes=true\nchanged-names<<([^\n]+)\nexample\n\1\n$/,
+  );
+  runDiff(
+    v13({ example: "1.0.0" }),
+    v13({ example: "1.0.0" }),
+    /^has-runtime-changes=false\nchanged-names<<([^\n]+)\n\n\1\n$/,
+  );
 });
