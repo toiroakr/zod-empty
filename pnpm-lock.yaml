@@ -208,7 +208,7 @@ snapshots:
 				"@types/react-dom": "19.3.0",
 				"@vitejs/plugin-react": "6.3.0",
 				"typescript": "7.0.2",
-				"vite": "8.3.7",
+				"vite": "8.3.8",
 			},
 		},
 	},
@@ -1366,7 +1366,7 @@ snapshots:
 				"@rolldown/plugin-babel": {"specifier": "^0.1.7 || ^0.2.0 || ^0.3.0", "optional": true},
 				"babel-plugin-react-compiler": {"specifier": "^1.0.0", "optional": true},
 				"oxc-transform-react": {"specifier": ">=0.152.0 <0.157.0", "optional": true},
-				"vite": {"specifier": "^8.0.0", "version": "8.3.7"},
+				"vite": {"specifier": "^8.0.0", "version": "8.3.8"},
 			},
 			"dependencies": {
 				"@rolldown/pluginutils": "1.0.1",
@@ -1408,7 +1408,7 @@ snapshots:
 			"integrity": "sha512-5umB9/jlWcqVS6fsrFmv5Gdnpu6wAUio/lEOwAmvB7v+lFo/IW2B9FhAD0p19GCULTgMzLCdUmuCDCnAzWgppQ==",
 			"peerDependencies": {
 				"msw": {"specifier": "^2.4.9 || ^3.0.0", "optional": true},
-				"vite": {"specifier": "^6.0.0 || ^7.0.0 || ^8.0.0", "version": "8.3.7", "optional": true},
+				"vite": {"specifier": "^6.0.0 || ^7.0.0 || ^8.0.0", "version": "8.3.8", "optional": true},
 			},
 			"dependencies": {
 				"@jridgewell/trace-mapping": "0.3.31",
@@ -2260,8 +2260,8 @@ snapshots:
 			"engines": {"node": ">=18.12.0"},
 		},
 
-		"vite@8.3.7": {
-			"integrity": "sha512-oxh0dMxrayBr33ScJvvBJ2HBQ2jc1TBrXKR2NyL/MJ9WPuX19mN2DXWUmywKdyw5RFVQBo8hmtb2FMC0LHrnng==",
+		"vite@8.3.8": {
+			"integrity": "sha512-LzOn3h9rG/0vhLdXrV4yJ4QFA9eEoqCl+Yx+kGJd7aB9w6nfNgVHKSYwLPZUHrz4ZGa+t+kXjV9itvcHDLQouA==",
 			"engines": {"node": "^20.19.0 || >=22.12.0"},
 			"hasBin": true,
 			"peerDependencies": {
@@ -2306,7 +2306,7 @@ snapshots:
 				"@vitest/ui": {"specifier": "5.1.0", "version": "5.1.0", "optional": true},
 				"happy-dom": {"specifier": "*", "optional": true},
 				"jsdom": {"specifier": "*", "optional": true},
-				"vite": {"specifier": "^6.4.0 || ^7.0.0 || ^8.0.0", "version": "8.3.7"},
+				"vite": {"specifier": "^6.4.0 || ^7.0.0 || ^8.0.0", "version": "8.3.8"},
 			},
 			"dependencies": {
 				"@types/chai": "5.2.3",
