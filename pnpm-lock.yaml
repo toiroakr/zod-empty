@@ -189,7 +189,7 @@ snapshots:
 				"lefthook": "2.2.2",
 				"oxfmt": "0.79.0",
 				"oxlint": "1.94.0",
-				"pkg-pr-new": "0.0.93",
+				"pkg-pr-new": "0.0.94",
 				"tsdown": "0.23.7",
 				"typescript": "7.0.2",
 				"vitest": "5.1.0",
@@ -2125,8 +2125,8 @@ snapshots:
 			"engines": {"node": ">=12"},
 		},
 
-		"pkg-pr-new@0.0.93": {
-			"integrity": "sha512-JH3HEO+m8sNFpalNAeGrNKjdwxNcXT3yuEuGMU/65dvLojPo+Ofnmc8la2v2ceisjXTOKQw/738Pj4KNFY7F+w==",
+		"pkg-pr-new@0.0.94": {
+			"integrity": "sha512-+s3ZZl1Vt3wHfsIRH+chHG6/3wsu1N+Z5jitNYAPc0GGCYR8xmju34UShzTAMosi4WAYFCXvp80LZZc/fXSdpQ==",
 			"hasBin": true,
 		},
 
