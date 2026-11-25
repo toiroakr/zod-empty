@@ -199,7 +199,7 @@ snapshots:
 
 		"samples/react-hook-form": {
 			"dependencies": {
-				"@hookform/resolvers": "7.0.6",
+				"@hookform/resolvers": "7.0.7",
 				"react": {
 					"specifier": "^19.3.1",
 					"version": "19.3.1",
@@ -464,8 +464,8 @@ snapshots:
 			},
 		},
 
-		"@hookform/resolvers@7.0.6": {
-			"integrity": "sha512-LSTMwW4tmRWtM7pS5HkSqahi71USbhrmjc9pNHNa7UyYTbKIK/e0G1EAw6xsEnp9GahTjXhunxRJp0Bd8E6NZA==",
+		"@hookform/resolvers@7.0.7": {
+			"integrity": "sha512-sxiEGu5dhg6gMEsGznEQ/++634YiRLmxclw+/B1+yNN9uuhKIfNCRTE4xwqkRcKNqBPwtmDXg5oDhLw3i/wklw==",
 			"peerDependencies": {
 				"@standard-schema/spec": {
 					"specifier": "^1.0.0",
